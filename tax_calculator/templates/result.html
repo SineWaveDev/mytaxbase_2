@@ -1,0 +1,56 @@
+<!-- <!DOCTYPE html>
+<html>
+<head>
+    <title>Tax Calculation Results</title>
+</head>
+<body>
+    <h1>Tax Calculation Results</h1>
+    <p>Gross Taxable Income: {{ gross_taxable_income }}</p>
+    <p>Tax on Total Income: {{ tax_on_total_income }}</p>
+    <p>Surcharge: {{ surcharge }}</p>
+    <p>Health and Education Cess: {{ health_and_education_cess }}</p>
+</body>
+</html> -->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Tax Calculation Results</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        
+        h1 {
+            color: #333;
+        }
+        
+        .result {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .result p {
+            margin: 10px 0;
+        }
+        
+        .result p:first-child {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="result">
+        <h1>Tax Calculation Results</h1>
+        <p>Gross Taxable Income: {{ gross_taxable_income }}</p>
+        <p>Tax on Total Income: {{ tax_on_total_income }}</p>
+        <p>Surcharge: {{ surcharge }}</p>
+        <p>Health and Education Cess: {{ health_and_education_cess }}</p>
+    </div>
+</body>
+</html>
