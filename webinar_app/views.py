@@ -225,8 +225,6 @@ class SendEmailAPIHTML(APIView):
 
 
 
-
-
 class SendEmailTeamControl(APIView):
     def post(self, request, *args, **kwargs):
         # Get parameters from the URL query parameters
@@ -273,10 +271,11 @@ class SendEmailTeamControl(APIView):
 
 
 class SendEmailTaxbaseLicenseVerification(APIView):
-    def post(self, request, *args, **kwargs):
-        # Get parameters from the URL query parameters
-        email = request.query_params.get('email')
-        url = request.query_params.get('url')
+    def get(self, request, *args, **kwargs):
+         # Get parameters from the JSON request body
+        data = request.data
+        email = data.get('email')
+        url = data.get('url')
         
         # Construct the email body with the provided message
         body = f"Dear Sir/Madam,\n\n" \
