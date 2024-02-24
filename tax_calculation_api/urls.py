@@ -35,7 +35,7 @@ urlpatterns = [
     path('api/', include('emailotp.urls')),
     path('api/', include('technical_api.urls')),
     # path('api/', include('renko_chart.urls')),
-    # path('api/', include('Support_calling_chart.urls')),
+    path('api/', include('Support_calling_chart.urls')),
     path('api/', include('portfolio_chart.urls')),
     path('api/', include('tax_cal_backend_api.urls')),
 ]
