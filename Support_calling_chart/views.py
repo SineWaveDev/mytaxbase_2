@@ -1,4 +1,3 @@
-
 from rest_framework.views import APIView
 from django.http import HttpResponse
 from rest_framework.response import Response
@@ -17,12 +16,15 @@ matplotlib.use('Agg')
 
 
 class Supportcallingchart(APIView):
-    def post(self, request, *args, **kwargs):
+    def get(self, request, *args, **kwargs):
         # Get parameters from the URL query parameters
-        quarter = int(request.query_params.get('quarter', 1))
+        start_date_param = request.query_params.get('start_date_param')
+        end_date_param = request.query_params.get('end_date_param')
         table = request.query_params.get('table')
-        print("quarter", quarter)
+        print("start_date_param", start_date_param)
+        print("end_date_param", end_date_param)
         print("table", table)
+
 
         # Connection parameters
         server = '3.108.198.195'
@@ -34,32 +36,30 @@ class Supportcallingchart(APIView):
         connection = pymssql.connect(server, username, password, database)
         print("SQL Server connected successfully!")
 
-        # Get today's date
-        today = datetime.now()
-        # Get the current year
-        current_year = today.year
+                
+        # Parse end_date_param into a datetime object
+        try:
+            end_date_param = datetime.strptime(end_date_param, '%Y-%m-%d')
+        except ValueError:
+            return Response({'error': 'Invalid date format for end_date_param. Please provide dates in the format YYYY-MM-DD.'}, status=status.HTTP_400_BAD_REQUEST)
 
-        # Calculate start_date_current based on the quarter
-        if quarter == 1:
-            start_date_current = datetime(current_year, 4, 1)
-        elif quarter == 2:
-            start_date_current = datetime(current_year, 7, 1)
-        elif quarter == 3:
-            start_date_current = datetime(current_year, 10, 1)
-        elif quarter == 4:
-            start_date_current = datetime(current_year + 1, 1, 1)
-        else:
-            return Response({'error': 'Invalid quarter parameter.'}, status=status.HTTP_400_BAD_REQUEST)
+        # Parse start_date and end_date from parameters
+        try:
+            start_date_current = datetime.strptime(start_date_param, '%Y-%m-%d')
+            # No need to parse end_date_param again, it's already a datetime object
+        except ValueError:
+            return Response({'error': 'Invalid date format. Please provide dates in the format YYYY-MM-DD.'}, status=status.HTTP_400_BAD_REQUEST)
+        
+
 
         # Check if start_date_current is greater than today's date
+        today = datetime.now()
         if start_date_current > today:
             # Use the same quarter in the previous year, only changing the year
-            start_date_current = start_date_current.replace(
-                year=current_year - 1)
+            start_date_current = start_date_current.replace(year=start_date_current.year - 1)
 
         # Calculate end_date_current as 3 months after start_date_current
-        end_date_current = start_date_current + \
-            timedelta(days=3 * 30)  # Assuming 30 days per month
+        end_date_current = end_date_param
         print("start_date_current", start_date_current)
         print("end_date_current", end_date_current)
 
@@ -140,7 +140,7 @@ class Supportcallingchart(APIView):
             fig, ax = plt.subplots()  # Use subplots to capture the plot
 
             # Start the loop from index 1 to skip the first column
-            for i in range(1, len(df_previous_weekly)):
+            for i in range(1, len(df_previous_weekly) - 1):  # Adjusted range to exclude the last element
                 ax.bar(index[i], df_previous_weekly['Previous_ID_Count'][i], width=bar_width, color='blue')
                 ax.bar(index[i] + bar_width, df_current_weekly['Current_ID_Count'][i], width=bar_width, color='orange')
 
@@ -151,7 +151,7 @@ class Supportcallingchart(APIView):
             # Set labels and title
             ax.set_xlabel('Weeks')
             ax.set_ylabel('Count')
-            ax.set_title(f'Comparison of Counts for Q{quarter}')
+            ax.set_title(f'Comparison of Counts Between  {start_date_param} to {end_date_param}')
 
             # Set xticks only if the DataFrame is not empty
             ax.set_xticks(index[1:] + bar_width / 2)
