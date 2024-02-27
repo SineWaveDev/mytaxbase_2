@@ -273,9 +273,13 @@ class SendEmailTeamControl(APIView):
 class SendEmailTaxbaseLicenseVerification(APIView):
     def get(self, request, *args, **kwargs):
          # Get parameters from the JSON request body
-        data = request.data
-        email = data.get('email')
-        url = data.get('url')
+
+        email = request.query_params.get('email')
+        url = request.query_params.get('url')
+
+        # data = request.data
+        # email = data.get('email')
+        # url = data.get('url')
         
         # Construct the email body with the provided message
         body = f"Dear Sir/Madam,\n\n" \
