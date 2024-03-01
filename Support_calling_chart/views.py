@@ -21,10 +21,18 @@ class Supportcallingchart(APIView):
         start_date_param = request.query_params.get('start_date_param')
         end_date_param = request.query_params.get('end_date_param')
         table = request.query_params.get('table')
-        print("start_date_param", start_date_param)
-        print("end_date_param", end_date_param)
-        print("table", table)
+       
+        # print("table", table)
 
+         # Convert date format from "01/05/2023" to "2023-05-01"
+        try:
+            start_date_param = datetime.strptime(start_date_param, '%d/%m/%Y').strftime('%Y-%m-%d')
+            end_date_param = datetime.strptime(end_date_param, '%d/%m/%Y').strftime('%Y-%m-%d')
+        except ValueError:
+            return Response({'error': 'Invalid date format. Please provide dates in the format dd/mm/yyyy.'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        # print("start_date_param", start_date_param)
+        # print("end_date_param", end_date_param)
 
         # Connection parameters
         server = '3.108.198.195'
@@ -34,7 +42,7 @@ class Supportcallingchart(APIView):
 
         # Create connections for two date ranges
         connection = pymssql.connect(server, username, password, database)
-        print("SQL Server connected successfully!")
+        # print("SQL Server connected successfully!")
 
                 
         # Parse end_date_param into a datetime object
@@ -60,14 +68,14 @@ class Supportcallingchart(APIView):
 
         # Calculate end_date_current as 3 months after start_date_current
         end_date_current = end_date_param
-        print("start_date_current", start_date_current)
-        print("end_date_current", end_date_current)
+        # print("start_date_current", start_date_current)
+        # print("end_date_current", end_date_current)
 
         # Calculate the same date range for the previous year
         start_date_previous = start_date_current - timedelta(days=365)
         end_date_previous = end_date_current - timedelta(days=365)
-        print("start_date_previous", start_date_previous)
-        print("end_date_previous", end_date_previous)
+        # print("start_date_previous", start_date_previous)
+        # print("end_date_previous", end_date_previous)
 
         # Strip time components if necessary
         start_date_previous = start_date_previous.replace(
@@ -100,18 +108,21 @@ class Supportcallingchart(APIView):
 
         # Convert the specified date column to a datetime object in both dataframes
         df_previous[date_column] = pd.to_datetime(df_previous[date_column])
+        # print("df_previous:",df_previous)
         df_current[date_column] = pd.to_datetime(df_current[date_column])
 
         # Close the connection
         connection.close()
+
+
 
        # Function to get the calendar week number for a given date
         def get_calendar_week(date):
             return date.isocalendar()[1]
 
         # Apply the function to create a new column for calendar week
-        df_previous['Calendar_Week'] = df_previous['DATE'].apply(get_calendar_week)
-        df_current['Calendar_Week'] = df_current['DATE'].apply(get_calendar_week)
+        df_previous['Calendar_Week'] = df_previous[date_column].apply(get_calendar_week)
+        df_current['Calendar_Week'] = df_current[date_column].apply(get_calendar_week)
 
         # Aggregate data based on calendar week for both current and previous years
         if table == "Hunting":
@@ -121,16 +132,31 @@ class Supportcallingchart(APIView):
             df_previous_weekly = df_previous.groupby('Calendar_Week').agg({'ID': 'nunique'}).reset_index()
             df_current_weekly = df_current.groupby('Calendar_Week').agg({'ID': 'nunique'}).reset_index()
 
-        print("df_previous_weekly", df_previous_weekly)
-        print("df_current_weekly", df_current_weekly)
+        # print("df_previous_weekly", df_previous_weekly)
+        # print("df_current_weekly", df_current_weekly)
 
-        # Check if the DataFrame is not empty before setting xticks
         if not df_previous_weekly.empty:
             # Rename the columns
             df_previous_weekly = df_previous_weekly.rename(
                 columns={'DATE': 'Start_Date', 'ID': 'Previous_ID_Count'})
+
             df_current_weekly = df_current_weekly.rename(
                 columns={'DATE': 'Start_Date', 'ID': 'Current_ID_Count'})
+
+            # Check the number of calendar weeks in each DataFrame
+            len_previous = len(df_previous_weekly)
+            len_current = len(df_current_weekly)
+
+            # If the lengths are different, adjust df_current_weekly to match the length of df_previous_weekly
+            if len_current > len_previous:
+                df_current_weekly = df_current_weekly.iloc[:len_previous]
+
+            # Now both DataFrames have the same number of calendar weeks
+
+            # print("df_previous_weekly:", df_previous_weekly)
+            # print("df_current_weekly:", df_current_weekly)
+
+
 
             # Plotting
             bar_width = 0.35
@@ -139,14 +165,37 @@ class Supportcallingchart(APIView):
 
             fig, ax = plt.subplots()  # Use subplots to capture the plot
 
-            # Start the loop from index 1 to skip the first column
-            for i in range(1, len(df_previous_weekly) - 1):  # Adjusted range to exclude the last element
-                ax.bar(index[i], df_previous_weekly['Previous_ID_Count'][i], width=bar_width, color='blue')
-                ax.bar(index[i] + bar_width, df_current_weekly['Current_ID_Count'][i], width=bar_width, color='orange')
+            if table == "Hunting":
+                # Start the loop from index 1 to skip the first column
+                for i in range(1, len(df_previous_weekly) - 1):  # Adjusted range to exclude the last element
 
-                # Annotate each bar with its value
-                ax.annotate(str(df_previous_weekly['Previous_ID_Count'][i]), xy=(index[i], df_previous_weekly['Previous_ID_Count'][i]), ha='center', va='bottom', fontsize=8)
-                ax.annotate(str(df_current_weekly['Current_ID_Count'][i]), xy=(index[i] + bar_width, df_current_weekly['Current_ID_Count'][i]), ha='center', va='bottom', fontsize=8)
+                    # print("df_previous_weekly['Previous_ID_Count'].....................", df_previous_weekly['Previous_ID_Count'])
+                    ax.bar(index[i], df_previous_weekly['REQ_ID'][i], width=bar_width, color='blue')
+                    ax.bar(index[i] + bar_width, df_current_weekly['REQ_ID'][i], width=bar_width, color='orange')
+
+                    # Annotate each bar with its value
+                    ax.annotate(str(df_previous_weekly['REQ_ID'][i]),
+                                xy=(index[i], df_previous_weekly['REQ_ID'][i]), ha='center', va='bottom',
+                                fontsize=8)
+                    ax.annotate(str(df_current_weekly['REQ_ID'][i]),
+                                xy=(index[i] + bar_width, df_current_weekly['REQ_ID'][i]), ha='center',
+                                va='bottom', fontsize=8)
+            else:
+                # Start the loop from index 1 to skip the first column
+                for i in range(1, len(df_previous_weekly) - 1):  # Adjusted range to exclude the last element
+
+                    # print("df_previous_weekly['Previous_ID_Count'].....................", df_previous_weekly['Previous_ID_Count'])
+                    ax.bar(index[i], df_previous_weekly['Previous_ID_Count'][i], width=bar_width, color='blue')
+                    ax.bar(index[i] + bar_width, df_current_weekly['Current_ID_Count'][i], width=bar_width, color='orange')
+
+                    # Annotate each bar with its value
+                    ax.annotate(str(df_previous_weekly['Previous_ID_Count'][i]),
+                                xy=(index[i], df_previous_weekly['Previous_ID_Count'][i]), ha='center', va='bottom',
+                                fontsize=8)
+                    ax.annotate(str(df_current_weekly['Current_ID_Count'][i]),
+                                xy=(index[i] + bar_width, df_current_weekly['Current_ID_Count'][i]), ha='center',
+                                va='bottom', fontsize=8)
+
 
             # Set labels and title
             ax.set_xlabel('Weeks')
@@ -170,7 +219,6 @@ class Supportcallingchart(APIView):
 
             # Close the plot to free up resources
             plt.close()
-
             # Create an HTTP response with the plot image
             response = HttpResponse(buffer.read(), content_type='image/png')
             response['Content-Disposition'] = 'attachment; filename="support_calling_chart.png"'
