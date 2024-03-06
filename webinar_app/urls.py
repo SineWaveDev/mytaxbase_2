@@ -7,5 +7,5 @@ urlpatterns = [
     path('send-email-teamcontrol/', SendEmailTeamControl.as_view(), name='send-email-teamcontrol'),
     path('send-email-license/', SendEmailTaxbaseLicenseVerification.as_view(), name='send-email-license'),
     path('forgot-password/', ForgotPassword.as_view(), name='forgot-password'),
-    
+
 ]
