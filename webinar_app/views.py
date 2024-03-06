@@ -270,10 +270,10 @@ class SendEmailTeamControl(APIView):
             return Response({"message": "Email sent successfully"}, status=status.HTTP_200_OK)
 
 
-class SendEmailTaxbaseLicenseVerification(APIView):
-    def get(self, request, *args, **kwargs):
-         # Get parameters from the JSON request body
 
+class SendEmailTaxbaseLicenseVerification(APIView):
+    def post(self, request, *args, **kwargs):
+        # Get parameters from the JSON request body
         # email = request.query_params.get('email')
         # url = request.query_params.get('url')
 
@@ -312,3 +312,40 @@ class SendEmailTaxbaseLicenseVerification(APIView):
             server.sendmail(sender_email, receiver_email, text)
             return Response({"message": "Email sent successfully"}, status=status.HTTP_200_OK)
 
+
+
+
+class ForgotPassword(APIView):
+    def post(self, request, *args, **kwargs):
+        # Get parameters from the URL query parameters
+        id = request.query_params.get('id')
+        password = request.query_params.get('password')
+        email = request.query_params.get('email')
+        
+        # Email content with formatting for the 'name' parameter
+        email_content = f"""
+       <p align=justify><SPAN style="FONT-SIZE: 10pt; FONT-FAMILY: Arial" > Dear Sir/Madam,</SPAN></p><p style="text-align: justify" > <SPAN style="font-size: 10pt; font-family: Arial">Your login details as follows:</SPAN></p><p align=justify> <SPAN style="FONT-SIZE: 10pt; FONT-FAMILY: Arial" >  Login ID : {id}</SPAN></p>  <p align=justify><SPAN style="FONT-SIZE: 10pt; FONT-FAMILY: Arial" >  Password : {password}</SPAN></p>  <br /><p style="text-align: justify" ><span style="font-size: 10pt; font-family: Arial">Thanking you,<br />Yours Truly,<br />Administrator,<br /><a href=http://www.sinewave.co.in >www.sinewave.co.in </a> </span></p>
+
+        """
+    
+
+        # Email configuration
+        sender_email = "crm@sinewave.co.in"
+        receiver_email = email
+        subject = "Forgot Password"
+        # Create a multipart message and set headers
+        message = MIMEMultipart()
+        message['From'] = sender_email
+        message['To'] = receiver_email
+        message['Subject'] = subject
+
+        # Attach HTML content to the email
+        message.attach(MIMEText(email_content, 'html'))
+
+        # Send the email
+        with smtplib.SMTP('smtp.gmail.com', 587) as server:
+            server.starttls()
+            server.login('crm@sinewave.co.in', 'fzjv eaaj kdcv svqr')
+            text = message.as_string()
+            server.sendmail(sender_email, receiver_email, text)
+            return Response({"message": "Email sent successfully"}, status=status.HTTP_200_OK)
