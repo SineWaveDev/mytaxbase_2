@@ -4,7 +4,8 @@ from rest_framework import status
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
-
+from urllib.parse import urlencode
+import requests
 
 class SendEmailAPI(APIView):
     def post(self, request, *args, **kwargs):
@@ -349,3 +350,85 @@ class ForgotPassword(APIView):
             text = message.as_string()
             server.sendmail(sender_email, receiver_email, text)
             return Response({"message": "Email sent successfully"}, status=status.HTTP_200_OK)
+
+
+
+
+
+
+
+class FetchDataAPIView(APIView):
+    def get(self, request):
+        pincode = request.query_params.get('pincode', None)
+        if not pincode:
+            return Response({'error': 'Pincode is required'}, status=status.HTTP_400_BAD_REQUEST)
+
+        api_url = 'https://api.data.gov.in/resource/9115b89c-7a80-4f54-9b06-21086e0f0bd7'
+        api_key = '579b464db66ec23bdd000001d16ce4b1164e435344fa6d817c33e649'
+        params = {
+            'api-key': api_key,
+            'format': 'json',
+            'filters[pincode]': pincode
+        }
+
+        # Encode the parameters properly
+        encoded_params = urlencode(params)
+
+        # Create the full URL
+        full_url = f"{api_url}?{encoded_params}"
+        print("full_url:",full_url)
+
+        try:
+            response = requests.get(full_url)
+            if response.status_code == 200:
+                data = response.json()
+                return Response(data, status=status.HTTP_200_OK)
+            else:
+                return Response({'error': 'Failed to fetch data'}, status=response.status_code)
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+
+
+
+
+class OfficePhoneRequestEmail(APIView):
+    def post(self, request, *args, **kwargs):
+        # Get parameters from the JSON request body
+        email = request.query_params.get('email')
+        name = request.query_params.get('name')
+        mobile_number = request.query_params.get('mobile_number')
+
+        # Construct the email body with the provided message
+        body = f"Dear {name},\n\n" \
+               f"Account call back request booked by Customer.\n\n" \
+               f"Kindly call on the following number and clear the call.\n\n" \
+               f"Phone No: {mobile_number}\n\n" \
+               f"Thanks & Regards,\n" \
+               f"Sinewave Team."
+
+        # Email configuration
+        sender_email = "crm@sinewave.co.in"
+        receiver_email = email
+        subject = "Taxbase License Verification"
+
+        # Create a multipart message and set headers
+        message = MIMEMultipart()
+        message['From'] = sender_email
+        message['To'] = receiver_email
+        message['Subject'] = subject
+
+        # Attach plain text content to the email
+        message.attach(MIMEText(body, 'plain'))
+
+        # Send the email
+        try:
+            with smtplib.SMTP('smtp.gmail.com', 587) as server:
+                server.starttls()
+                server.login('crm@sinewave.co.in', 'fzjv eaaj kdcv svqr')
+                text = message.as_string()
+                server.sendmail(sender_email, receiver_email, text)
+                return Response({"message": "Email sent successfully"}, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
