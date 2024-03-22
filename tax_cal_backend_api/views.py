@@ -10,11 +10,13 @@ def calculate_tax(request):
 
     # Extract first_payload from the request data
     first_payload = request_data.get('first_payload', {})
+    print("first_payload:",first_payload)
 
     # Call the first API
     first_api_url = "http://mosversion2.sinewave.co.in/api/calculate/"
     first_response = requests.post(first_api_url, json=first_payload)
     first_data = first_response.json()
+    print("first_data:",first_data)
 
     # Initialize second_payload with data from the request_data
     second_payload = request_data.get('second_payload', {})
