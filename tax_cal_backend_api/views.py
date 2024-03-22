@@ -22,7 +22,7 @@ def calculate_tax(request):
     # Merge the data obtained from the first response into second_payload
     second_payload.update({
         "BusinessProfession": first_data.get('BusinessProfession', {}),
-        "DedutionUSCHVIA": first_data.get('DeductionVI', {}),
+        "DedutionUSCHVIA": first_data.get('DeductionVI_and_AeighthC_Total', {}),
         "HouseProperty": first_data.get('HouseProperty', {}),
         "Salary": first_data.get('Salary', {}),
         "OtherSources": first_data.get('OtherSources', {})
