@@ -47,7 +47,7 @@ def calculate(request):
             other_sources_data = data.get('OtherSources', {})
             saving_interest = other_sources_data.get('SavingInterest', 0)
             fd_interest = other_sources_data.get('FDInterest', 0)
-            dividend_income = other_sources_data.get('DividendIncome', 0)
+            dividend_income = 0
             other_income = other_sources_data.get('OtherIncome', 0)
 
             deduction_via_data = data.get('DeductionVIAeighthC', {})

@@ -432,3 +432,132 @@ class OfficePhoneRequestEmail(APIView):
                 return Response({"message": "Email sent successfully"}, status=status.HTTP_200_OK)
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            
+
+
+
+
+
+
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+import smtplib
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+
+class SendEmailAPIHTML2(APIView):
+    def post(self, request, *args, **kwargs):
+        # Get parameters from the URL query parameters 
+        email = request.query_params.get('email')
+        id = request.query_params.get('id')
+        
+        # Email content with formatting for the 'id' parameter
+        email_content = f"""
+       <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>My Taxbase App Information</title>
+            <style>
+                body {{
+                    font-family: Arial, sans-serif;
+                    line-height: 1.6;
+                    color: #444;
+                    background-color: #f4f4f4;
+                    margin: 0;
+                    padding: 0;
+                }}
+
+                .container {{
+                    max-width: 600px;
+                    margin: 20px auto;
+                    background-color: #fff;
+                    border-radius: 8px;
+                    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+                    padding: 30px;
+                }}
+
+                h1 {{
+                    text-align: left;
+                    color: #333;
+                }}
+
+                p {{
+                    margin-bottom: 15px;
+                    text-align: left;
+                }}
+
+                ul {{
+                    margin-bottom: 20px;
+                    padding-left: 20px;
+                }}
+
+                li {{
+                    margin-bottom: 5px;
+                }}
+
+                a {{
+                    color: #007bff;
+                    text-decoration: none;
+                }}
+
+                a:hover {{
+                    text-decoration: underline;
+                }}
+
+                .signature {{
+                    font-style: italic;
+                    text-align: left;
+                    color: #888;
+                    margin-top: 30px;
+                }}
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <h1>My Taxbase App Information</h1>
+                <p>Dear Sir/Madam,</p>
+                <p>We are pleased to provide you with information about the My Taxbase App.</p>
+                <p>To download the app for iOS or Android, please use the following links:</p>
+                <ul>
+                    <li><strong>Android:</strong> <a href="https://play.google.com/store/apps/details?id=com.sinewave.mytaxbase">Download from Google Play Store</a></li>
+                    <li><strong>iOS:</strong> <a href="https://apps.apple.com/in/app/my-taxbase/id6451190735">Download from App Store</a></li>
+                </ul>
+                <p>After downloading and installing the app, you will be prompted to enter your Tax Professional ID. Please use the following details:</p>
+                <p><strong>Tax Professional ID:</strong> {id}</p>
+                <p>Once you've entered your mobile number and submitted, an OTP for mobile verification will be sent. Enter the OTP to create your login password for the My Taxbase App. You can then add a member by providing Name, Email ID, PAN, and ITD Password.</p>
+                <p>After saving your information, you can access features such as the ITR Dashboard, Refund Status, e-Proceeding & Intimation, and check your Tax Calculation from the app's menu.</p>
+                <p class="signature">Best Regards,
+            </div>
+        </body>
+        </html>
+
+
+        """
+    
+        # Email configuration
+        sender_email = "crm@sinewave.co.in"
+        receiver_email = email
+        subject = "For Change Password On Sinewave Portel"
+        
+        # Create a multipart message and set headers
+        message = MIMEMultipart()
+        message['From'] = sender_email
+        message['To'] = receiver_email
+        message['Subject'] = subject
+
+        # Attach HTML content to the email
+        message.attach(MIMEText(email_content, 'html'))
+
+        # Send the email
+        try:
+            with smtplib.SMTP('smtp.gmail.com', 587) as server:
+                server.starttls()
+                server.login('crm@sinewave.co.in', 'fzjv eaaj kdcv svqr')
+                text = message.as_string()
+                server.sendmail(sender_email, receiver_email, text)
+                return Response({"message": "Email sent successfully"}, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
