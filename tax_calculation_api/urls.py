@@ -38,4 +38,5 @@ urlpatterns = [
     path('api/', include('Support_calling_chart.urls')),
     path('api/', include('portfolio_chart.urls')),
     path('api/', include('tax_cal_backend_api.urls')),
+    path('api/', include('whatsapp_api.urls')),
 ]
