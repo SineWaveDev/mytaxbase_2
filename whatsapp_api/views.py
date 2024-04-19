@@ -38,7 +38,7 @@ def send_whatsapp_message(request):
                                         {
                                             "type": "IMAGE",
                                             "image": {
-                                                "link": "https://sinewavedb.s3.ap-south-1.amazonaws.com/Training.png"
+                                                "link": "https://sinewavedb.s3.ap-south-1.amazonaws.com/1.png"
                                             }
                                         }
                                     ]
