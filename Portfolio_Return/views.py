@@ -19,7 +19,8 @@ class FileUploadView(APIView):
             file = serializer.validated_data['file']
             
             # Save the uploaded file
-            file_path = f'media/{file.name}'
+            # file_path = f'media/{file.name}'
+            file_path = r'C:\Users\Sinewave#2022\OneDrive - Sinewave\Desktop\Book1.xlsx'
             with open(file_path, 'wb+') as destination:
                 for chunk in file.chunks():
                     destination.write(chunk)
@@ -117,34 +118,45 @@ class FileUploadView(APIView):
             max_daily_drawdown = daily_drawdown.expanding(min_periods=1).min()
             close_prices_with_qty['Max_Drawdown'] = max_daily_drawdown
 
-            output_file = f'media/close_prices_with_qty.csv'
+            output_file = f'C:\\Users\\Sinewave#2022\\Downloads\\close_prices_with_qty.csv'
             close_prices_with_qty.to_csv(output_file)
 
-            # Generate plots
-            fig, ax1 = plt.subplots(figsize=(10, 6))
-            sns.lineplot(data=close_prices_with_qty, x='Date', y='Portfolio_Return', color='blue', ax=ax1, label='Return')
-            ax2 = ax1.twinx()
-            sns.lineplot(data=close_prices_with_qty, x='Date', y='Portfolio_std_dev', color='red', ax=ax2, label='Standard Deviation')
-            ax1.set_xlabel('Date')
-            ax1.set_ylabel('Return', color='blue')
-            ax2.set_ylabel('Standard Deviation', color='red')
-            plt.title('Portfolio Return and Standard Deviation per Day')
-            plt.xticks(rotation=45)
-            fig.legend(loc='upper left')
-            plt.tight_layout()
-            plt.savefig('media/daily_portfolio_return.png')
-            plt.close()
 
-            plt.figure(figsize=(10, 6))
-            sns.lineplot(data=close_prices_with_qty, x='Date', y='Cumulative_Return', color='green', label='Cumulative Return')
-            sns.lineplot(data=close_prices_with_qty, x='Date', y='Portfolio_std_dev', color='orange', label='Portfolio Std Dev')
-            sns.lineplot(data=close_prices_with_qty, x='Date', y='Sharpe_Ratio', color='red', label='Sharpe Ratio')
-            plt.xlabel('Date')
-            plt.ylabel('Value')
-            plt.title('Cumulative Portfolio Return vs Portfolio Std Dev vs Sharpe Ratio')
-            plt.xticks(rotation=45)
-            plt.legend()
-            plt.savefig('media/cumulative_return_vs_std_dev_vs_sharpe_ratio.png')
+
+           # Assuming you have loaded your data into a DataFrame named close_prices_with_qty
+            close_prices_with_qty['Date'] = pd.to_datetime(close_prices_with_qty['Date'])
+
+            # Calculate cumulative return
+            close_prices_with_qty['Cumulative_Return'] = (1 + close_prices_with_qty['Portfolio_Return']).cumprod() - 1
+
+            # Amplify standard deviation values
+            amplification_factor = 50  # Adjust as needed
+            close_prices_with_qty['Amplified_Std_Dev'] = close_prices_with_qty['Portfolio_std_dev'] * amplification_factor
+
+            # Plotting
+            sns.set_style("whitegrid")  # Set style
+            fig, ax1 = plt.subplots(figsize=(18, 10), facecolor='lightcyan')  # Increase figure size to 12x8 inches
+
+            # Plot cumulative return
+            ax1.plot(close_prices_with_qty['Date'], close_prices_with_qty['Cumulative_Return'], color='blue', label='Cumulative Return')
+            ax1.set_xlabel('Date')
+            ax1.set_ylabel('Cumulative Return', color='blue')
+
+            # Create a second y-axis for amplified standard deviation
+            ax2 = ax1.twinx()
+            ax2.plot(close_prices_with_qty['Date'], close_prices_with_qty['Amplified_Std_Dev'], color='red', linestyle='--', label='Amplified Standard Deviation')
+            ax2.set_ylabel('Amplified Standard Deviation', color='red')
+
+            # Plot Sharpe Ratio on the same secondary y-axis
+            ax2.plot(close_prices_with_qty['Date'], close_prices_with_qty['Sharpe_Ratio'], color='green', linestyle='-.', label='Sharpe Ratio')
+
+            # Add legend with better formatting
+            lines1, labels1 = ax1.get_legend_handles_labels()
+            lines2, labels2 = ax2.get_legend_handles_labels()
+            ax1.legend(lines1 + lines2, labels1 + labels2, loc='upper left', bbox_to_anchor=(0.05, 0.95))
+
+            plt.title('Cumulative Return, Amplified Standard Deviation, and Sharpe Ratio')
+            plt.savefig('C:\\Users\\Sinewave#2022\\Downloads\\cumulative_return_vs_std_dev_vs_sharpe_ratio.png')
             plt.close()
 
             return Response({'message': 'File uploaded successfully', 'output_file': output_file}, status=status.HTTP_200_OK)
