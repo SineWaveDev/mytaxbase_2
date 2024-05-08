@@ -1,6 +1,7 @@
 from rest_framework.views import APIView
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.response import Response
+from django.http import HttpResponse
 from rest_framework import status
 from .serializers import ExcelFileSerializer
 import yfinance as yf
@@ -10,6 +11,8 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import base64
 import io
+import zipfile
+import os
 
 
 class FileUploadView(APIView):
@@ -169,10 +172,10 @@ class FileUploadView(APIView):
 
             close_prices_with_qty.reset_index(inplace=True)
 
-            # Saving close_prices_with_qty to a CSV file
-            output_file_csv = io.BytesIO()
-            close_prices_with_qty.to_csv(output_file_csv, index=False)
-            output_file_csv.seek(0)
+            # # Saving close_prices_with_qty to a CSV file
+            # output_file_csv = io.BytesIO()
+            # close_prices_with_qty.to_csv(output_file_csv, index=False)
+            # output_file_csv.seek(0)
 
             filtered_df = merged_df[(merged_df['Date'] >= '2023-04-01') & (merged_df['Date'] <= '2024-03-31')]
 
@@ -204,7 +207,9 @@ class FileUploadView(APIView):
             plt.title('Cumulative Return, Amplified Standard Deviation, and Sharpe Ratio')
             # plt.savefig('C:\\Users\\Sinewave#2022\\Downloads\\cumulative_return_vs_std_dev_vs_sharpe_ratio.png')
             plt.close()
-            # Saving close_prices_with_qty to a CSV file
+
+
+           # Saving close_prices_with_qty to a CSV file
             output_file_csv = io.BytesIO()
             close_prices_with_qty.to_csv(output_file_csv, index=False)
             output_file_csv.seek(0)
@@ -214,19 +219,34 @@ class FileUploadView(APIView):
             plt.savefig(output_file_png)
             output_file_png.seek(0)
             
-            # Return response with files attached
-            response = Response({'message': 'File uploaded successfully'}, status=status.HTTP_200_OK)
-            
-            # Attach CSV file
-            response['Content-Disposition'] = 'attachment; filename="close_prices_with_qty.csv"'
-            response['Content-Type'] = 'text/csv'
-            response.content = output_file_csv.getvalue()
-            
-            # Attach PNG file
-            response['Content-Disposition'] = 'attachment; filename="cumulative_return_vs_std_dev_vs_sharpe_ratio.png"'
-            response['Content-Type'] = 'image/png'
-            response.content = output_file_png.getvalue()
+            # Create a folder to store files
+            folder_name = 'downloaded_files'
+            os.makedirs(folder_name, exist_ok=True)
 
-            return response
+            # Save CSV file
+            csv_file_path = os.path.join(folder_name, 'close_prices_with_qty.csv')
+            with open(csv_file_path, 'wb') as f:
+                f.write(output_file_csv.getvalue())
+
+            # Save PNG file
+            png_file_path = os.path.join(folder_name, 'cumulative_return_vs_std_dev_vs_sharpe_ratio.png')
+            with open(png_file_path, 'wb') as f:
+                f.write(output_file_png.getvalue())
+
+            # Create a zip file containing both files
+            zip_file_path = 'downloaded_files.zip'
+            with zipfile.ZipFile(zip_file_path, 'w') as zipf:
+                zipf.write(csv_file_path, 'close_prices_with_qty.csv')
+                zipf.write(png_file_path, 'cumulative_return_vs_std_dev_vs_sharpe_ratio.png')
+
+            # Delete temporary files
+            os.remove(csv_file_path)
+            os.remove(png_file_path)
+
+            # Return the zip file in response
+            with open(zip_file_path, 'rb') as f:
+                response = HttpResponse(f.read(), content_type='application/zip')
+                response['Content-Disposition'] = 'attachment; filename="downloaded_files.zip"'
+                return response
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
