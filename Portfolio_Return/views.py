@@ -214,14 +214,19 @@ class FileUploadView(APIView):
             plt.savefig(output_file_png)
             output_file_png.seek(0)
             
-            # Encode files as base64 strings
-            csv_base64 = base64.b64encode(output_file_csv.read()).decode()
-            png_base64 = base64.b64encode(output_file_png.read()).decode()
+            # Return response with files attached
+            response = Response({'message': 'File uploaded successfully'}, status=status.HTTP_200_OK)
             
-            return Response({
-                'message': 'File uploaded successfully',
-                'close_prices_with_qty_csv': csv_base64,
-                'cumulative_return_vs_std_dev_vs_sharpe_ratio_png': png_base64
-            }, status=status.HTTP_200_OK)
+            # Attach CSV file
+            response['Content-Disposition'] = 'attachment; filename="close_prices_with_qty.csv"'
+            response['Content-Type'] = 'text/csv'
+            response.content = output_file_csv.getvalue()
+            
+            # Attach PNG file
+            response['Content-Disposition'] = 'attachment; filename="cumulative_return_vs_std_dev_vs_sharpe_ratio.png"'
+            response['Content-Type'] = 'image/png'
+            response.content = output_file_png.getvalue()
+
+            return response
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
