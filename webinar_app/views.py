@@ -447,7 +447,7 @@ from rest_framework.response import Response
 from rest_framework import status
 
 class SendEmailAPIHTML2(APIView):
-    def post(self, request, *args, **kwargs):
+    def get(self, request, *args, **kwargs):
         # Get parameters from the URL query parameters 
         email = request.query_params.get('email')
         id = request.query_params.get('id')
