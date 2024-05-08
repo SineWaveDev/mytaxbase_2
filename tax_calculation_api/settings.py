@@ -52,7 +52,6 @@ INSTALLED_APPS = [
     'Support_calling_chart',
     'portfolio_chart',
     'Portfolio_Return',
-    'Optimiz_Portfolio',
     'corsheaders',
 
 ]

@@ -40,5 +40,4 @@ urlpatterns = [
     path('api/', include('tax_cal_backend_api.urls')),
     path('api/', include('whatsapp_api.urls')),
     path('api/', include('Portfolio_Return.urls')),
-    path('api/', include('Optimiz_Portfolio.urls')),
 ]
