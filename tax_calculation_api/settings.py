@@ -51,6 +51,8 @@ INSTALLED_APPS = [
     'technical_api',
     'Support_calling_chart',
     'portfolio_chart',
+    'pdftoexcel',
+    'schema_json_compare',
     'Portfolio_Return',
     'corsheaders',
 

@@ -1,6 +1,8 @@
+
+
 from django.urls import path
-from .views import FileUploadView
+from .views import GeneratePortfolioReport
 
 urlpatterns = [
-    path('upload/', FileUploadView.as_view(), name='file-upload'),
+    path('upload/', GeneratePortfolioReport.as_view(), name='file-upload'),
 ]

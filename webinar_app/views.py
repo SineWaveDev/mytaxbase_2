@@ -390,9 +390,6 @@ class FetchDataAPIView(APIView):
 
 
 
-
-
-
 class OfficePhoneRequestEmail(APIView):
     def post(self, request, *args, **kwargs):
         # Get parameters from the JSON request body
