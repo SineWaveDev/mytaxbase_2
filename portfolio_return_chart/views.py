@@ -13,7 +13,7 @@ from rest_framework.response import Response
 from django.http import HttpResponse  # Import HttpResponse here
 from rest_framework.views import APIView
 
-class GeneratePortfolioReport(APIView):
+class GeneratePortfolioReportChart(APIView):
     def post(self, request):
         # Check if JSON data is provided in the request
         if not request.data:
@@ -236,9 +236,6 @@ class GeneratePortfolioReport(APIView):
         # Display the plot
         plt.show()
 
-        # Convert the DataFrame to a CSV string and then to bytes
-        csv_bytes = close_prices_with_qty.to_csv(index=False).encode()
-
         # Convert the plot to bytes
         png_bytes = io.BytesIO()
         plt.savefig(png_bytes, format='png')
@@ -247,8 +244,8 @@ class GeneratePortfolioReport(APIView):
         # Close the plot
         plt.close()
 
-        # Set the response content type to CSV
-        response = HttpResponse(csv_bytes, content_type='text/csv')
-        response['Content-Disposition'] = 'attachment; filename=portfolio_return.csv'
+        # Set response content type to PNG image
+        response = HttpResponse(png_bytes.getvalue(), content_type='image/png')
+        response['Content-Disposition'] = 'attachment; filename=plot.png'
 
         return response

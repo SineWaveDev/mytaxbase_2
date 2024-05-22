@@ -42,4 +42,5 @@ urlpatterns = [
     path('api/', include('pdftoexcel.urls')),
     path('api/', include('schema_json_compare.urls')),
     path('api/', include('Portfolio_Return.urls')),
+    path('api/', include('portfolio_return_chart.urls')),
 ]

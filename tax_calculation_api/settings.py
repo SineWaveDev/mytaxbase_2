@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     'pdftoexcel',
     'schema_json_compare',
     'Portfolio_Return',
+    'portfolio_return_chart',
     'corsheaders',
 
 ]
