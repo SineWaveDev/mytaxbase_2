@@ -43,4 +43,5 @@ urlpatterns = [
     path('api/', include('schema_json_compare.urls')),
     path('api/', include('Portfolio_Return.urls')),
     path('api/', include('portfolio_return_chart.urls')),
+    path('api/', include('json_creation_api.urls')),
 ]

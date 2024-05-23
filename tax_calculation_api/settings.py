@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     'schema_json_compare',
     'Portfolio_Return',
     'portfolio_return_chart',
+    'json_creation_api',
     'corsheaders',
 
 ]

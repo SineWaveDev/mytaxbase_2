@@ -7,8 +7,13 @@ import os
 import pdfplumber
 import pandas as pd
 import xlrd
-from xlutils.copy import copy
+from openpyxl import Workbook
 import tempfile
+from openpyxl import load_workbook
+from xlutils.copy import copy
+import io
+from django.http import HttpResponse
+
 
 
 @api_view(['POST'])
@@ -25,6 +30,7 @@ def process_files(request):
                     all_text += page.extract_text()
             return all_text
 
+
         def parse_data(text):
             lines = text.split('\n')
             data = []
@@ -38,9 +44,19 @@ def process_files(request):
             df.to_excel(output_file, index=False)
 
         def main():
+            download_folder = r"C:\Users\Sinewave#2022\Downloads"
+            pdf_file = os.path.join(download_folder, "RealizedCapitalGainDetailed_ANIL_MOOLANI_2239643546 - Copy.pdf")
+            output_file = os.path.join(download_folder, "output.xlsx")
+
+            # Excel file ka path
+            file_path = r'C:\Users\Sinewave#2022\Downloads\test.xls'
+
             pdf_text = extract_data_from_pdf(pdf_file)
+
             parsed_data = parse_data(pdf_text)
+
             max_columns = max(len(row) for row in parsed_data)
+
             columns = [f"Column{i+1}" for i in range(max_columns)]
             df = pd.DataFrame(parsed_data, columns=columns)
 
@@ -133,7 +149,7 @@ def process_files(request):
             output_file_path = r'C:\Users\Sinewave#2022\Downloads\modified_test.xlsx'
             df2.to_excel(output_file_path, index=False)
 
-                    # Iterate over the rows of the 'Description' column
+            # Iterate over the rows of the 'Description' column
             for i in range(len(df2)):
                 # Check if the value is a date in 'ISIN Code' column
                 if '/' in df2.loc[i, 'ISIN Code']:
@@ -189,17 +205,10 @@ def process_files(request):
             # Drop rows where 'ISIN Code' column is NaN
             df2 = df2.dropna(subset=['ISIN Code'])
 
-            # Excel file ka path
-            # excel_file = r'C:\Users\Sinewave#2022\Downloads\test.xls'
-
-                # Save the Excel file to a temporary location
-            with tempfile.NamedTemporaryFile(delete=False, suffix='.xlsx') as temp_excel_file:
-                output_file_path = temp_excel_file.name
-                df.to_excel(output_file_path, index=False)
-
+            
 
             # Excel file ko xlrd se load karna
-            workbook = xlrd.open_workbook(excel_file, formatting_info=True)
+            workbook = xlrd.open_workbook(file_path, formatting_info=True)
             sheet = workbook.sheet_by_index(0)
 
             # Existing workbook ka copy banana
@@ -226,20 +235,17 @@ def process_files(request):
                     value = 0 if value == 0 else value
                     output_sheet.write(start_row + row_index + 1, col_index, value)  # Write data from df2
 
-            # # Modified workbook ko save karna
-            # output_file_path = r'C:\Users\Sinewave#2022\Downloads\modified_test.xls'
-            # output_workbook.save(output_file_path)
 
-            # Construct the full output file path
-            output_file_name = "modified_test.xls"
-            download_folder = os.path.join(os.path.expanduser("~"), "Downloads")  # Get the downloads folder path
-            output_file_path = os.path.join(download_folder, output_file_name)
+ # Save the modified Excel file to an in-memory BytesIO object
+            output_bytes = io.BytesIO()
+            output_workbook.save(output_bytes)
+            output_bytes.seek(0)
 
-            # Saving the modified Excel file
-            df.to_excel(output_file_path, index=False)
+            # Set the response content type to Excel
+            response = HttpResponse(output_bytes, content_type='application/vnd.ms-excel')
+            response['Content-Disposition'] = 'attachment; filename=modified_test.xls'
+            return response
 
-        main()
-
-        return Response("Files processed successfully", status=status.HTTP_200_OK)
+        return main()
     else:
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
