@@ -154,6 +154,8 @@ class GeneratePortfolioReportChart(APIView):
 
                 if sell_date in data['Purchase Date'].values:
                     purchase_data = data[data['Purchase Date'] == sell_date]
+                    group_data['Net Sale / Market Value'] = group_data['Net Sale / Market Value'].astype(float)
+                    purchase_data['Net Purchase Value'] = purchase_data['Net Purchase Value'].astype(float)
                     net_transaction_value = group_data['Net Sale / Market Value'].sum() - purchase_data[
                         'Net Purchase Value'].sum()
                 else:
@@ -163,6 +165,11 @@ class GeneratePortfolioReportChart(APIView):
                     previous_day_portfolio_value = close_prices_with_qty.iloc[row_index - 1]['Portfolio_Value']
                 except KeyError:
                     previous_day_portfolio_value = 0
+
+                previous_day_portfolio_value = np.array(previous_day_portfolio_value, dtype=float)
+
+                # Ensure net_transaction_value is a float
+                net_transaction_value = float(net_transaction_value)
 
                 denominator = previous_day_portfolio_value - net_transaction_value
                 result = portfolio_value / denominator / 100
