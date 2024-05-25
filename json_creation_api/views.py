@@ -13,11 +13,38 @@ class GenerateJSONView(APIView):
 
             # Validate required fields (this can be expanded as necessary)
             required_fields = [
-                'first_name', 'surname', 'email', 'gross_salary', 'salary', 'perquisites_value', 
-                'profits_in_salary', 'income_notified_89A', 'income_notified_89A_type', 
-                'income_notified_other_89A', 'increliefus_89A', 'net_salary', 'deduction_us_16', 
-                'deduction_us_16ia', 'entertainment_alw_16ii'
-            ]
+                    'SWVersionNo', 'SWCreatedBy', 'JSONCreatedBy', 'JSONCreationDate', 
+                    'IntermediaryCity', 'Digest', 'FormName', 'Description', 'AssessmentYear', 
+                    'SchemaVer', 'FormVer', 'FirstName', 'SurNameOrOrgName', 'ResidenceNo', 
+                    'ResidenceName', 'RoadOrStreet', 'LocalityOrArea', 'CityOrTownOrDistrict', 
+                    'StateCode', 'CountryCode', 'PinCode', 'CountryCodeMobile', 'MobileNo', 
+                    'EmailAddress', 'PAN', 'DOB', 'EmployerCategory', 'AadhaarCardNo', 'UsrDeductUndChapVIA',
+                    'ReturnFileSec', 'OptOutNewTaxRegime', 'SeventhProvisio139', 'clauseiv7provisio139i', 
+                    'ItrFilingDueDate', 'GrossSalary', 'Salary', 'PerquisitesValue', 'ProfitsInSalary', 
+                    'IncomeNotified89A', 'IncomeNotified89AType', 'IncomeNotifiedOther89A', 'Increliefus89A', 
+                    'NetSalary', 'DeductionUs16', 'DeductionUs16ia', 'EntertainmentAlw16ii', 
+                    'ProfessionalTaxUs16iii', 'IncomeFromSal', 'GrossRentReceived', 'TaxPaidlocalAuth', 
+                    'AnnualValue', 'StandardDeduction', 'InterestPayable', 'ArrearsUnrealizedRentRcvd', 
+                    'TotalIncomeOfHP', 'IncomeOthSrc', 'OthersIncDtlsOthSrc', 'OthSrcNatureDesc', 
+                    'OthSrcOthNatOfInc', 'DividendInc', 'DeductionUs57iia', 'Increliefus89AOS', 
+                    'GrossTotIncome', 'Section80C', 'Section80CCC', 'Section80CCDEmployeeOrSE', 'Section80CCD1B', 
+                    'Section80CCDEmployer', 'Section80D', 'Section80DD', 'Section80DDB', 'Section80E', 'Section80EE', 
+                    'Section80EEA', 'Section80EEB', 'Section80G', 'Section80GG', 'Section80GGA', 'Section80GGC', 
+                    'Section80U', 'Section80TTA', 'Section80TTB', 'AnyOthSec80CCH', 'TotalChapVIADeductions', 
+                    'TotalIncome', 'ExemptIncAgriOthUs10Dtls', 'ExemptIncAgriOthUs10Total', 'TotalTaxPayable', 
+                    'Rebate87A', 'TaxPayableOnRebate', 'EducationCess', 'GrossTaxLiability', 'Section89', 
+                    'NetTaxLiability', 'TotalIntrstPay', 'IntrstPayUs234A', 'IntrstPayUs234B', 'IntrstPayUs234C', 
+                    'LateFilingFee234F', 'TotTaxPlusIntrstPay', 'AdvanceTax', 'TDS', 'TCS', 'SelfAssessmentTax', 'Up16Of3To31Of3_DIV',
+                    'TotalTaxesPaid', 'BalTaxPayable', 'RefundDue', 'IFSCCode', 'BankName', 'Upto15Of6_DIV', 'Upto15Of9_DIV',
+                    'BankAccountNo', 'AccountType', 'SeniorCitizenFlag', 'SelfAndFamily', 'HealthInsPremSlfFam', 'Up16Of12To15Of3_DIV',
+                    'PrevHlthChckUpSlfFam', 'SelfAndFamilySeniorCitizen', 'HlthInsPremSlfFamSrCtzn', 'OthSrcOthAmount_DIV',
+                    'PrevHlthChckUpSlfFamSrCtzn', 'MedicalExpSlfFamSrCtzn', 'ParentsSeniorCitizenFlag', 'Parents', 'Up16Of9To15Of12_DIV',
+                    'HlthInsPremParents', 'PrevHlthChckUpParents', 'ParentsSeniorCitizen', 'HlthInsPremParentsSrCtzn', 'Up16Of3To31Of3_IFD',
+                    'PrevHlthChckUpParentsSrCtzn', 'MedicalExpParentsSrCtzn', 'EligibleAmountOfDedn', 'Up16Of12To15Of3_IFD', 'DeductUndChapVIA',
+                    'TotalTDSonSalaries', 'TotalTDSonOthThanSals', 'TotalTDS3Details', 'TotalTaxPayments', 'Up16Of9To15Of12_IFD', 
+                    'AssesseeVerName', 'FatherName', 'AssesseeVerPAN', 'Capacity', 'Place', 'OthSrcOthAmount_IFD', 'Upto15Of6_IFD', 'Upto15Of9_IFD'
+                ]
+
             
             for field in required_fields:
                 if field not in data:
@@ -28,240 +55,196 @@ class GenerateJSONView(APIView):
                 "ITR": {
                     "ITR1": {
                         "CreationInfo": {
-                            "SWVersionNo": "P1.43.2.3",
-                            "SWCreatedBy": "SW20000053",
-                            "JSONCreatedBy": "SW20000053",
-                            "JSONCreationDate": "2024-04-03",
-                            "IntermediaryCity": "Pune",
-                            "Digest": "8atsmLhD0VTb11QhPl9aNSxU2fz+I4V/zcP4lAod86c="
+                            "SWVersionNo": data['SWVersionNo'],
+                            "SWCreatedBy": data['SWCreatedBy'],
+                            "JSONCreatedBy": data['JSONCreatedBy'],
+                            "JSONCreationDate": data['JSONCreationDate'],
+                            "IntermediaryCity": data['IntermediaryCity'],
+                            "Digest": data['Digest']
                         },
                         "Form_ITR1": {
-                            "FormName": "ITR-1",
-                            "Description": "For Indls having Income from Salary, Pension, family pension and Interest",
-                            "AssessmentYear": "2024",
-                            "SchemaVer": "Ver1.0",
-                            "FormVer": "Ver1.0"
+                            "FormName": data['FormName'],
+                            "Description": data['Description'],
+                            "AssessmentYear": data['AssessmentYear'],
+                            "SchemaVer": data['SchemaVer'],
+                            "FormVer": data['FormVer']
                         },
                         "PersonalInfo": {
                             "AssesseeName": {
-                                "FirstName": data['first_name'],
-                                "SurNameOrOrgName": data['surname']
+                                "FirstName": data['FirstName'],
+                                "SurNameOrOrgName": data['SurNameOrOrgName']
                             },
                             "Address": {
-                                "ResidenceNo": "T 22",
-                                "ResidenceName": "3RD FLOOR",
-                                "RoadOrStreet": "SUPER MALL",
-                                "LocalityOrArea": "WANOWRIE",
-                                "CityOrTownOrDistrict": "PUNE",
-                                "StateCode": "19",
-                                "CountryCode": "91",
-                                "PinCode": 411040,
-                                "CountryCodeMobile": 91,
-                                "MobileNo": 9880123456,
-                                "EmailAddress": data['email']
+                                "ResidenceNo": data['ResidenceNo'],
+                                "ResidenceName": data['ResidenceName'],
+                                "RoadOrStreet": data['RoadOrStreet'],
+                                "LocalityOrArea": data['LocalityOrArea'],
+                                "CityOrTownOrDistrict": data['CityOrTownOrDistrict'],
+                                "StateCode": data['StateCode'],
+                                "CountryCode": data['CountryCode'],
+                                "PinCode": data['PinCode'],
+                                "CountryCodeMobile": data['CountryCodeMobile'],
+                                "MobileNo": data['MobileNo'],
+                                "EmailAddress": data['EmailAddress']
                             },
-                            "PAN": "SINPT2024A",
-                            "DOB": "1995-01-01",
-                            "EmployerCategory": "OTH",
-                            "AadhaarCardNo": "293277010339"
+                            "PAN": data['PAN'],
+                            "DOB": data['DOB'],
+                            "EmployerCategory": data['EmployerCategory'],
+                            "AadhaarCardNo": data['AadhaarCardNo']
                         },
                         "FilingStatus": {
-                            "ReturnFileSec": 11,
-                            "OptOutNewTaxRegime": "N",
-                            "SeventhProvisio139": "N",
-                            "clauseiv7provisio139i": "N",
-                            "ItrFilingDueDate": "2024-07-31"
+                            "ReturnFileSec": data['ReturnFileSec'],
+                            "OptOutNewTaxRegime": data['OptOutNewTaxRegime'],
+                            "SeventhProvisio139": data['SeventhProvisio139'],
+                            "clauseiv7provisio139i": data['clauseiv7provisio139i'],
+                            "ItrFilingDueDate": data['ItrFilingDueDate']
                         },
                         "ITR1_IncomeDeductions": {
-                            "GrossSalary": data['gross_salary'],
-                            "Salary": data['salary'],
-                            "PerquisitesValue": data['perquisites_value'],
-                            "ProfitsInSalary": data['profits_in_salary'],
-                            "IncomeNotified89A": data['income_notified_89A'],
-                            "IncomeNotified89AType": data['income_notified_89A_type'],
-                            "IncomeNotifiedOther89A": data['income_notified_other_89A'],
-                            "Increliefus89A": data['increliefus_89A'],
-                            "NetSalary": data['net_salary'],
-                            "DeductionUs16": data['deduction_us_16'],
-                            "DeductionUs16ia": data['deduction_us_16ia'],
-                            "EntertainmentAlw16ii": data['entertainment_alw_16ii'],
-                            "IncomeFromSal": data['net_salary'] - data['deduction_us_16'],  # Example calculation
-                            "GrossRentReceived": 0,
-                            "TaxPaidlocalAuth": 0,
-                            "AnnualValue": 0,
-                            "StandardDeduction": 0,
-                            "InterestPayable": 0,
-                            "ArrearsUnrealizedRentRcvd": 0,
-                            "TotalIncomeOfHP": 0,
-                            "IncomeOthSrc": 10000,
+                            "GrossSalary": data['GrossSalary'],
+                            "Salary": data['Salary'],
+                            "PerquisitesValue": data['PerquisitesValue'],
+                            "ProfitsInSalary": data['ProfitsInSalary'],
+                            "IncomeNotified89A": data['IncomeNotified89A'],
+                            "IncomeNotified89AType": data['IncomeNotified89AType'],
+                            "IncomeNotifiedOther89A": data['IncomeNotifiedOther89A'],
+                            "Increliefus89A": data['Increliefus89A'],
+                            "NetSalary": data['NetSalary'],
+                            "DeductionUs16": data['DeductionUs16'],
+                            "DeductionUs16ia": data['DeductionUs16ia'],
+                            "EntertainmentAlw16ii": data['EntertainmentAlw16ii'],
+                            "IncomeFromSal": data['IncomeFromSal'],
+                            "GrossRentReceived": data['GrossRentReceived'],
+                            "TaxPaidlocalAuth": data['TaxPaidlocalAuth'],
+                            "AnnualValue": data['AnnualValue'],
+                            "StandardDeduction": data['StandardDeduction'],
+                            "InterestPayable": data['InterestPayable'],
+                            "ArrearsUnrealizedRentRcvd": data['ArrearsUnrealizedRentRcvd'],
+                            "TotalIncomeOfHP": data['TotalIncomeOfHP'],
+                            "IncomeOthSrc": data['IncomeOthSrc'],
                             "OthersInc": {
                                 "OthersIncDtlsOthSrc": [
                                     {
                                         "OthSrcNatureDesc": "IFD",
                                         "OthSrcOthNatOfInc": "Interest from Deposit(Bank/Post Office/Cooperative Society)",
-                                        "OthSrcOthAmount": 10000,
+                                        "OthSrcOthAmount": data['OthSrcOthAmount_IFD'],
                                         "DividendInc": {
                                             "DateRange": {
-                                                "Upto15Of6": 0,
-                                                "Upto15Of9": 0,
-                                                "Up16Of9To15Of12": 0,
-                                                "Up16Of12To15Of3": 0,
-                                                "Up16Of3To31Of3": 0
+                                                "Upto15Of6": data['Upto15Of6_IFD'],
+                                                "Upto15Of9": data['Upto15Of9_IFD'],
+                                                "Up16Of9To15Of12": data['Up16Of9To15Of12_IFD'],
+                                                "Up16Of12To15Of3": data['Up16Of12To15Of3_IFD'],
+                                                "Up16Of3To31Of3": data['Up16Of3To31Of3_IFD']
                                             }
                                         }
                                     },
                                     {
                                         "OthSrcNatureDesc": "DIV",
                                         "OthSrcOthNatOfInc": "Dividend",
-                                        "OthSrcOthAmount": 0,
+                                        "OthSrcOthAmount": data['OthSrcOthAmount_DIV'],
                                         "DividendInc": {
                                             "DateRange": {
-                                                "Upto15Of6": 0,
-                                                "Upto15Of9": 0,
-                                                "Up16Of9To15Of12": 0,
-                                                "Up16Of12To15Of3": 0,
-                                                "Up16Of3To31Of3": 0
+                                                "Upto15Of6": data['Upto15Of6_DIV'],
+                                                "Upto15Of9": data['Upto15Of9_DIV'],
+                                                "Up16Of9To15Of12": data['Up16Of9To15Of12_DIV'],
+                                                "Up16Of12To15Of3": data['Up16Of12To15Of3_DIV'],
+                                                "Up16Of3To31Of3": data['Up16Of3To31Of3_DIV']
                                             }
                                         }
                                     }
                                 ]
                             },
-                            "DeductionUs57iia": 0,
-                            "Increliefus89AOS": 0,
-                            "GrossTotIncome": 160000,
-                            "UsrDeductUndChapVIA": {
-                                "Section80C": 0,
-                                "Section80CCC": 0,
-                                "Section80CCDEmployeeOrSE": 0,
-                                "Section80CCD1B": 0,
-                                "Section80CCDEmployer": 0,
-                                "Section80D": 0,
-                                "Section80DD": 0,
-                                "Section80DDB": 0,
-                                "Section80E": 0,
-                                "Section80EE": 0,
-                                "Section80EEA": 0,
-                                "Section80EEB": 0,
-                                "Section80G": 0,
-                                "Section80GG": 0,
-                                "Section80GGA": 0,
-                                "Section80GGC": 0,
-                                "Section80U": 0,
-                                "Section80TTA": 0,
-                                "Section80TTB": 0,
-                                "AnyOthSec80CCH": 0,
-                                "TotalChapVIADeductions": 0
-                            },
-                            "DeductUndChapVIA": {
-                                "Section80C": 0,
-                                "Section80CCC": 0,
-                                "Section80CCDEmployeeOrSE": 0,
-                                "Section80CCD1B": 0,
-                                "Section80CCDEmployer": 0,
-                                "Section80D": 0,
-                                "Section80DD": 0,
-                                "Section80DDB": 0,
-                                "Section80E": 0,
-                                "Section80EE": 0,
-                                "Section80EEA": 0,
-                                "Section80EEB": 0,
-                                "Section80G": 0,
-                                "Section80GG": 0,
-                                "Section80GGA": 0,
-                                "Section80GGC": 0,
-                                "Section80U": 0,
-                                "Section80TTA": 0,
-                                "Section80TTB": 0,
-                                "AnyOthSec80CCH": 0,
-                                "TotalChapVIADeductions": 0
-                            },
-                            "TotalIncome": 160000,
+                            "DeductionUs57iia": data['DeductionUs57iia'],
+                            "Increliefus89AOS": data['Increliefus89AOS'],
+                            "GrossTotIncome": data['GrossTotIncome'],
+                            "UsrDeductUndChapVIA": data['UsrDeductUndChapVIA'],
+                            "DeductUndChapVIA": data['DeductUndChapVIA'],
+                            "TotalIncome": data['TotalIncome'],
                             "ExemptIncAgriOthUs10": {
-                                "ExemptIncAgriOthUs10Dtls": [],
-                                "ExemptIncAgriOthUs10Total": 0
+                                "ExemptIncAgriOthUs10Dtls": data['ExemptIncAgriOthUs10Dtls'],
+                                "ExemptIncAgriOthUs10Total": data['ExemptIncAgriOthUs10Total']
                             }
                         },
                         "ITR1_TaxComputation": {
-                            "TotalTaxPayable": 0,
-                            "Rebate87A": 0,
-                            "TaxPayableOnRebate": 0,
-                            "EducationCess": 0,
-                            "GrossTaxLiability": 0,
-                            "Section89": 0,
-                            "NetTaxLiability": 0,
-                            "TotalIntrstPay": 0,
+                            "TotalTaxPayable": data['TotalTaxPayable'],
+                            "Rebate87A": data['Rebate87A'],
+                            "TaxPayableOnRebate": data['TaxPayableOnRebate'],
+                            "EducationCess": data['EducationCess'],
+                            "GrossTaxLiability": data['GrossTaxLiability'],
+                            "Section89": data['Section89'],
+                            "NetTaxLiability": data['NetTaxLiability'],
+                            "TotalIntrstPay": data['TotalIntrstPay'],
                             "IntrstPay": {
-                                "IntrstPayUs234A": 0,
-                                "IntrstPayUs234B": 0,
-                                "IntrstPayUs234C": 0,
-                                "LateFilingFee234F": 0
+                                "IntrstPayUs234A": data['IntrstPayUs234A'],
+                                "IntrstPayUs234B": data['IntrstPayUs234B'],
+                                "IntrstPayUs234C": data['IntrstPayUs234C'],
+                                "LateFilingFee234F": data['LateFilingFee234F']
                             },
-                            "TotTaxPlusIntrstPay": 0
+                            "TotTaxPlusIntrstPay": data['TotTaxPlusIntrstPay']
                         },
                         "TaxPaid": {
                             "TaxesPaid": {
-                                "AdvanceTax": 0,
-                                "TDS": 0,
-                                "TCS": 0,
-                                "SelfAssessmentTax": 0,
-                                "TotalTaxesPaid": 0
+                                "AdvanceTax": data['AdvanceTax'],
+                                "TDS": data['TDS'],
+                                "TCS": data['TCS'],
+                                "SelfAssessmentTax": data['SelfAssessmentTax'],
+                                "TotalTaxesPaid": data['TotalTaxesPaid']
                             },
-                            "BalTaxPayable": 0
+                            "BalTaxPayable": data['BalTaxPayable']
                         },
                         "Refund": {
-                            "RefundDue": 0,
+                            "RefundDue": data['RefundDue'],
                             "BankAccountDtls": {
                                 "AddtnlBankDetails": [
                                     {
-                                        "IFSCCode": "SBIN0000001",
-                                        "BankName": "State Bank of India",
-                                        "BankAccountNo": "55555222222222222222",
-                                        "AccountType": "SB"
+                                        "IFSCCode": data['IFSCCode'],
+                                        "BankName": data['BankName'],
+                                        "BankAccountNo": data['BankAccountNo'],
+                                        "AccountType": data['AccountType']
                                     }
                                 ]
                             }
                         },
                         "Schedule80D": {
                             "Sec80DSelfFamSrCtznHealth": {
-                                "SeniorCitizenFlag": "S",
-                                "SelfAndFamily": 0,
-                                "HealthInsPremSlfFam": 0,
-                                "PrevHlthChckUpSlfFam": 0,
-                                "SelfAndFamilySeniorCitizen": 0,
-                                "HlthInsPremSlfFamSrCtzn": 0,
-                                "PrevHlthChckUpSlfFamSrCtzn": 0,
-                                "MedicalExpSlfFamSrCtzn": 0,
-                                "ParentsSeniorCitizenFlag": "P",
-                                "Parents": 0,
-                                "HlthInsPremParents": 0,
-                                "PrevHlthChckUpParents": 0,
-                                "ParentsSeniorCitizen": 0,
-                                "HlthInsPremParentsSrCtzn": 0,
-                                "PrevHlthChckUpParentsSrCtzn": 0,
-                                "MedicalExpParentsSrCtzn": 0,
-                                "EligibleAmountOfDedn": 0
+                                "SeniorCitizenFlag": data['SeniorCitizenFlag'],
+                                "SelfAndFamily": data['SelfAndFamily'],
+                                "HealthInsPremSlfFam": data['HealthInsPremSlfFam'],
+                                "PrevHlthChckUpSlfFam": data['PrevHlthChckUpSlfFam'],
+                                "SelfAndFamilySeniorCitizen": data['SelfAndFamilySeniorCitizen'],
+                                "HlthInsPremSlfFamSrCtzn": data['HlthInsPremSlfFamSrCtzn'],
+                                "PrevHlthChckUpSlfFamSrCtzn": data['PrevHlthChckUpSlfFamSrCtzn'],
+                                "MedicalExpSlfFamSrCtzn": data['MedicalExpSlfFamSrCtzn'],
+                                "ParentsSeniorCitizenFlag": data['ParentsSeniorCitizenFlag'],
+                                "Parents": data['Parents'],
+                                "HlthInsPremParents": data['HlthInsPremParents'],
+                                "PrevHlthChckUpParents": data['PrevHlthChckUpParents'],
+                                "ParentsSeniorCitizen": data['ParentsSeniorCitizen'],
+                                "HlthInsPremParentsSrCtzn": data['HlthInsPremParentsSrCtzn'],
+                                "PrevHlthChckUpParentsSrCtzn": data['PrevHlthChckUpParentsSrCtzn'],
+                                "MedicalExpParentsSrCtzn": data['MedicalExpParentsSrCtzn'],
+                                "EligibleAmountOfDedn": data['EligibleAmountOfDedn']
                             }
                         },
                         "TDSonSalaries": {
-                            "TotalTDSonSalaries": 0
+                            "TotalTDSonSalaries": data['TotalTDSonSalaries']
                         },
                         "TDSonOthThanSals": {
-                            "TotalTDSonOthThanSals": 0
+                            "TotalTDSonOthThanSals": data['TotalTDSonOthThanSals']
                         },
                         "ScheduleTDS3Dtls": {
-                            "TotalTDS3Details": 0
+                            "TotalTDS3Details": data['TotalTDS3Details']
                         },
                         "TaxPayments": {
-                            "TotalTaxPayments": 0
+                            "TotalTaxPayments": data['TotalTaxPayments']
                         },
                         "Verification": {
                             "Declaration": {
-                                "AssesseeVerName": "Sourav Gupta",
-                                "FatherName": "Gupta",
-                                "AssesseeVerPAN": "SINPT2024A"
+                                "AssesseeVerName": data['AssesseeVerName'],
+                                "FatherName": data['FatherName'],
+                                "AssesseeVerPAN": data['AssesseeVerPAN']
                             },
-                            "Capacity": "S",
-                            "Place": "PUNE"
+                            "Capacity": data['Capacity'],
+                            "Place": data['Place']
                         }
                     }
                 }

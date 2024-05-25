@@ -56,6 +56,8 @@ INSTALLED_APPS = [
     'Portfolio_Return',
     'portfolio_return_chart',
     'json_creation_api',
+    'Digest_code',
+    'portfolio_optimization',
     'corsheaders',
 
 ]
