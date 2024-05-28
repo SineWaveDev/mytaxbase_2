@@ -103,8 +103,8 @@
                 "DeductionUs57iia": 0,
                 "Increliefus89AOS": 0,
                 "GrossTotIncome": 0,
-                "UsrDeductUndChapVIA": 0,
-                "DeductUndChapVIA": 0,
+                "UsrDeductUndChapVIA": "",
+                "DeductUndChapVIA": "",
                 "TotalIncome": 0,
                 "ExemptIncAgriOthUs10": {
                     "ExemptIncAgriOthUs10Dtls": [],

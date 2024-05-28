@@ -3,38 +3,35 @@ from django.views.decorators.csrf import csrf_exempt
 import os
 import hmac
 import base64
+import json
 
-JSON_PATH = r"C:\Users\Sinewave#2022\Downloads"
-JSON_FILE_NAME = "ITR 3_2024-2025_ITR3 sample 1.json"
-JSON_FILE_PATH = os.path.join(JSON_PATH, JSON_FILE_NAME)
 ALGORITHM = "sha256"
 VALUES = {"SW20000297": ["HeRWGR9kDHyLAOZT", "1790"]}
 
 @csrf_exempt
 def generate_digest(request):
     if request.method == 'POST':
-        data = request.body.decode('utf-8')
+        try:
+            data = json.loads(request.body)
+        except json.JSONDecodeError:
+            return JsonResponse({"error": "Invalid JSON payload"})
 
-        dig_index = data.index("Digest")
+        itr = data.get("ITR", {})
+        itr3 = itr.get("ITR3", {})
+        creation_info = itr3.get("CreationInfo", {})
+        
+        digest = creation_info.get("Digest", None)
+        sw_created_by = creation_info.get("SWCreatedBy", None)
 
-        if (
-            data[dig_index + 6] != '"'
-            or data[dig_index + 7] != ":"
-            or data[dig_index + 8] != '"'
-        ):
+        if digest is None or digest != "-":
             return JsonResponse({"error": "Invalid Digest key detected"})
-
-        swc_index = data.index("SWCreatedBy")
-        sw_created_by = data[swc_index + 14 : swc_index + 24]
-
-        if not sw_created_by.startswith("SW") or len(sw_created_by) != 10:
+        
+        if not sw_created_by or not sw_created_by.startswith("SW") or len(sw_created_by) != 10:
             return JsonResponse({"error": "Invalid SWCreatedBy"})
 
-        digest_bef = data[: dig_index + 9]
-        dig_value_colon_end_index = data.index('"', dig_index + 9)
-        digest_aft = data[dig_value_colon_end_index :]
-
-        hash_to_gen_for = digest_bef + "-" + digest_aft
+        # Create the data string for hashing
+        data_str = json.dumps(data, separators=(',', ':'))
+        hash_to_gen_for = data_str.replace(f'"Digest":"{digest}"', '"Digest":""')
 
         key_itrtns = get_key_iteration(sw_created_by)
         if not key_itrtns:
