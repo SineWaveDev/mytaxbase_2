@@ -7,6 +7,9 @@ from email.mime.multipart import MIMEMultipart
 from urllib.parse import urlencode
 import requests
 
+
+
+
 class SendEmailAPI(APIView):
     def post(self, request, *args, **kwargs):
         # Get parameters from the URL query parameters
@@ -555,6 +558,90 @@ class SendEmailAPIHTML2(APIView):
                 server.login('crm@sinewave.co.in', 'fzjv eaaj kdcv svqr')
                 text = message.as_string()
                 server.sendmail(sender_email, receiver_email, text)
+                return Response({"message": "Email sent successfully"}, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+
+
+class CSCRegisterEmail(APIView):
+     def post(self, request, *args, **kwargs):
+        # Get parameters from the JSON request body
+        email = request.data.get('email')
+        name = request.data.get('name')
+        mobile_number = request.data.get('mobile_number')
+
+        # Check if any parameter is None
+        if email is None or name is None or mobile_number is None:
+            return Response({"error": "One or more parameters are missing"}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Construct the email body
+        body = f"Subject: Confirmation of Individual DSC Registration for Customer: {name}\n\n" \
+               f"Dear Rutuja,\n\n" \
+               f"I hope this email finds you well.\n\n" \
+               f"I am pleased to inform you that we have successfully registered {name} for an Individual Digital Signature Certificate (DSC). Below are the details of the registration:\n\n" \
+               f"Customer's Name: {name}\n" \
+               f"Mobile Number: {mobile_number}\n" \
+               f"Email Address: {email}\n\n" \
+               f"Thank you for your attention to this matter.\n" \
+               f"Sinewave Team."
+
+        # Email configuration
+        sender_email = "crm@sinewave.co.in"
+        receiver_email = "rutuja.s@sinewave.in"
+
+        # Send the email
+        try:
+            with smtplib.SMTP('smtp.gmail.com', 587) as server:
+                server.starttls()
+                server.login('crm@sinewave.co.in', 'fzjv eaaj kdcv svqr')
+                server.sendmail(sender_email, receiver_email, body)
+                return Response({"message": "Email sent successfully"}, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+
+
+
+class PaymentReminderEmail(APIView):
+    def post(self, request, *args, **kwargs):
+        # Get parameters from the JSON request body
+        email = request.data.get('email')
+        amount = request.data.get('amount')
+        url = request.data.get('url')
+        discount = request.data.get('discount')
+        product = request.data.get('product')
+        customer_name = request.data.get('customer_name')
+        customer_id = request.data.get('customer_id')
+        executive_name = request.data.get('executive_name')
+        executive_number = request.data.get('executive_number')
+        executive_email = request.data.get('executive_email')
+
+        # Construct the email body
+        body = f"Subject: Product Payment \n" \
+               f"Dear M/S {customer_name},\n\n" \
+               f"Please click on the following URL to make a payment:\n\n" \
+               f"{url}\n\n" \
+               f"Kindly Click On URL to make a payment of Rs.{amount} Less Discount%{discount} to {product}. " \
+               f"For your reference, this payment would be towards M/S {customer_name} ({customer_id}).\n\n" \
+               f"For any further clarification, please feel free to connect with our executive.\n\n" \
+               f"Executive Name: {executive_name}\n" \
+               f"Executive Number: {executive_number}\n" \
+               f"Executive Email: {executive_email}\n\n"\
+               f"Sinewave Team."
+
+        # Email configuration
+        sender_email = "crm@sinewave.co.in"
+        receiver_email = email
+
+        # Send the email
+        try:
+            with smtplib.SMTP('smtp.gmail.com', 587) as server:
+                server.starttls()
+                server.login('crm@sinewave.co.in', 'fzjv eaaj kdcv svqr')
+                server.sendmail(sender_email, receiver_email, body)
                 return Response({"message": "Email sent successfully"}, status=status.HTTP_200_OK)
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

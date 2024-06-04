@@ -45,5 +45,6 @@ urlpatterns = [
     path('api/', include('portfolio_return_chart.urls')),
     path('api/', include('json_creation_api.urls')),
     path('api/', include('Digest_code.urls')),
+    path('api/', include('Dividend_Data.urls')),
     path('api/', include('portfolio_optimization.urls')),
 ]

@@ -58,6 +58,7 @@ INSTALLED_APPS = [
     'json_creation_api',
     'Digest_code',
     'portfolio_optimization',
+    'Dividend_Data',
     'corsheaders',
 
 ]
