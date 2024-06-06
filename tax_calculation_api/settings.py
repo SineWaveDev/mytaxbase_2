@@ -59,6 +59,7 @@ INSTALLED_APPS = [
     'Digest_code',
     'portfolio_optimization',
     'Dividend_Data',
+    'callback_whatsapp_message',
     'corsheaders',
 
 ]

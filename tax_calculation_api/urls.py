@@ -47,4 +47,5 @@ urlpatterns = [
     path('api/', include('Digest_code.urls')),
     path('api/', include('Dividend_Data.urls')),
     path('api/', include('portfolio_optimization.urls')),
+    path('api/', include('callback_whatsapp_message.urls')),
 ]
