@@ -27,6 +27,11 @@ def calculate(request):
 
             less_allowances_u10 = salary_data.get('LessAllowancesu10', 0)
             standard_deduction = salary_data.get('StandardDeduction', 0)
+            Perquisites = salary_data.get('Perquisites', 0)
+            Profit_in_liew_of_salary = salary_data.get('Profit_in_liew_of_salary', 0)
+            Entertenment_Allowance = salary_data.get('Entertenment_Allowance', 0)
+            Income_from_Ret_Benefit = salary_data.get('Income_from_Ret_Benefit', 0)
+
 
             house_property_data = data.get('HouseProperty', {})
             if tax_regime.lower() == 'new':
@@ -40,6 +45,11 @@ def calculate(request):
                 'RentedHousePropertyInterestonHouLoan', 0)
             repair_charges = house_property_data.get('RepairCharges', 0)
 
+            Deemed_Let_Out_Rent_Received = house_property_data.get('Deemed_Let_Out_Rent_Received', 0)
+            Deemed_Let_Out_Property_Tax = house_property_data.get('Deemed_Let_Out_Property_Tax', 0)
+            Deemed_Let_Out_Interest_on_Hou_Loan = house_property_data.get('Deemed_Let_Out_Interest_on_Hou_Loan', 0)
+            Deemed_Let_Out_Repair_Charges = house_property_data.get('Deemed_Let_Out_Repair_Charges', 0)
+
             business_profession_data = data.get('BusinessProfession', {})
             business = business_profession_data.get('Business', 0)
             profession = business_profession_data.get('Profession', 0)
@@ -49,6 +59,10 @@ def calculate(request):
             fd_interest = other_sources_data.get('FDInterest', 0)
             dividend_income = 0
             other_income = other_sources_data.get('OtherIncome', 0)
+
+            Family_Pension = other_sources_data.get('Family_Pension', 0)
+            Deduction_us_57  = other_sources_data.get('Deduction_us_57', 0)
+            Income_from_Ret_Ben_89 = other_sources_data.get('Income_from_Ret_Ben_89', 0)
 
             deduction_via_data = data.get('DeductionVIAeighthC', {})
 
@@ -145,19 +159,23 @@ def calculate(request):
             STCG_Normal_3103 = STCG.get('STCG_Normal_3103', 0)
 
             # Calculations
-            salary = salary_da + hra_received + other_allowances - \
-                less_allowances_u10 - professional_tax - standard_deduction
+            salary = salary_da + hra_received + other_allowances + \
+                Perquisites + Profit_in_liew_of_salary - less_allowances_u10 - Entertenment_Allowance - professional_tax - Income_from_Ret_Benefit - standard_deduction
 
             house_property = rent_received - property_tax - \
                 rented_house_property_interest_on_hou_loan
             repair_charges = (rent_received - property_tax) * 30 / 100
 
             house_property_1 = house_property - repair_charges
-            final_house_property = house_property_1 - self_occupied_interest_on_hou_loan
+
+            house_property_2 = Deemed_Let_Out_Rent_Received - Deemed_Let_Out_Property_Tax - Deemed_Let_Out_Interest_on_Hou_Loan - Deemed_Let_Out_Repair_Charges
+
+
+            final_house_property = house_property_1 - self_occupied_interest_on_hou_loan + house_property_2
 
             business_profession = business + profession
 
-            other_sources = saving_interest + fd_interest + dividend_income + other_income
+            other_sources = saving_interest + fd_interest + dividend_income + other_income + Family_Pension - Deduction_us_57 + Income_from_Ret_Ben_89
 
             deduction_via_data = eighth_lic + eighth_providend_fund + eighth_ppf + eighth_housing_loan_repayment + \
                 eighth_nps + eighth_ells + eighth_tution_fees + eighth_others
