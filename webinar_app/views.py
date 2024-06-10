@@ -615,10 +615,7 @@ class PaymentReminderEmail(APIView):
         product = request.data.get('product')
         customer_name = request.data.get('customer_name')
         customer_id = request.data.get('customer_id')
-        executive_name = request.data.get('executive_name')
-        executive_number = request.data.get('executive_number')
-        executive_email = request.data.get('executive_email')
-
+        
         # Construct the email body
         body = f"Subject: Product Payment \n" \
                f"Dear M/S {customer_name},\n\n" \
@@ -626,10 +623,6 @@ class PaymentReminderEmail(APIView):
                f"{url}\n\n" \
                f"Kindly Click On URL to make a payment of Rs.{amount} Less Discount%{discount} to {product}. " \
                f"For your reference, this payment would be towards M/S {customer_name} ({customer_id}).\n\n" \
-               f"For any further clarification, please feel free to connect with our executive.\n\n" \
-               f"Executive Name: {executive_name}\n" \
-               f"Executive Number: {executive_number}\n" \
-               f"Executive Email: {executive_email}\n\n"\
                f"Sinewave Team."
 
         # Email configuration
