@@ -615,7 +615,7 @@ class PaymentReminderEmail(APIView):
         product = request.data.get('product')
         customer_name = request.data.get('customer_name')
         customer_id = request.data.get('customer_id')
-        
+
         # Construct the email body
         body = f"Subject: Product Payment \n" \
                f"Dear M/S {customer_name},\n\n" \
@@ -634,6 +634,43 @@ class PaymentReminderEmail(APIView):
             with smtplib.SMTP('smtp.gmail.com', 587) as server:
                 server.starttls()
                 server.login('crm@sinewave.co.in', 'fzjv eaaj kdcv svqr')
+                server.sendmail(sender_email, receiver_email, body)
+                return Response({"message": "Email sent successfully"}, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+
+
+
+
+class Paymentmailtosanjay(APIView):
+    def post(self, request, *args, **kwargs):
+        # Check if the request data is not None
+        if not request.data:
+            return Response({"error": "Request body is empty or not properly formatted."}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Get customer name from the JSON request body
+        customer_name = request.data.get('customer_name')
+        email = request.data.get('email')
+
+        if not customer_name:
+            return Response({"error": "Customer name is required."}, status=status.HTTP_400_BAD_REQUEST)
+        
+        # Construct the email body
+        body = f"Subject: Incorrect Contact Information\n\n" \
+               f"Dear M/S Sanjay,\n\n" \
+               f"The Email Id/Mobile number provided by you for {customer_name}, is incorrect. Kindly correct the same and retry."
+
+        # Email configuration
+        sender_email = "crm@sinewave.co.in"
+        receiver_email = email  # Replace with actual receiver email
+
+        # Send the email
+        try:
+            with smtplib.SMTP('smtp.gmail.com', 587) as server:
+                server.starttls()
+                server.login(sender_email, 'fzjv eaaj kdcv svqr')
                 server.sendmail(sender_email, receiver_email, body)
                 return Response({"message": "Email sent successfully"}, status=status.HTTP_200_OK)
         except Exception as e:
