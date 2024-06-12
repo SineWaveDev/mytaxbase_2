@@ -49,4 +49,5 @@ urlpatterns = [
     path('api/', include('portfolio_optimization.urls')),
     path('api/', include('callback_whatsapp_message.urls')),
     path('api/', include('Combined_API_For_ITR1.urls')),
+    path('api/', include('Whatsapp_API_Error_Control.urls')),
 ]
