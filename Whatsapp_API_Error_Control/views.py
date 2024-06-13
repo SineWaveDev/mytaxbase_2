@@ -1,9 +1,9 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from django.http import JsonResponse
 import pymssql
 from datetime import datetime
+import dateutil.parser
 
 class WebhookView(APIView):
     def post(self, request, *args, **kwargs):
@@ -25,9 +25,9 @@ class WebhookView(APIView):
 
         # Insert data into the table
         try:
-            created_at = datetime.fromtimestamp(data.get('created_at') / 1000.0).strftime('%Y-%m-%d %H:%M:%S')
+            created_at = dateutil.parser.isoparse(data.get('created_at')).strftime('%Y-%m-%d %H:%M:%S')
             topic = data.get('topic')
-            delivery_attempt = data.get('delivery_attempt')
+            delivery_attempt = int(data.get('delivery_attempt'))
             app_id = data.get('app_id')
             webhook_id = data.get('webhook_id')
             project_id = data.get('project_id')
