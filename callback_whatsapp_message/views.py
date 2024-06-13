@@ -19,7 +19,7 @@ class SendCampaignAPIView(APIView):
             "destination": mobile_number,
             "userName": "Sagar",
             "media": {
-                "url": "https://sinewavedb.s3.ap-south-1.amazonaws.com/WhatsApp+Image+2024-04-15+at+12.36.12+PM+(1).jpeg",
+                "url": "https://sinewavedb.s3.ap-south-1.amazonaws.com/WhatsAppImageDSC.jpeg",
                 "filename": "png"
             }
         }
