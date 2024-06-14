@@ -19,18 +19,19 @@ def calculate(request):
             salary_da = salary_data.get('SalaryDA', 0)
             hra_received = salary_data.get('HRAReceived', 0)
             other_allowances = salary_data.get('OtherAllowances', 0)
-           # Logic for "Less : Allowances u/s 10, Professional Tax" based on the "Regime"
-            if tax_regime.lower() == 'new':
-                professional_tax = 0
-            else:
-                professional_tax = salary_data.get('ProfessionalTax', 0)
-
             less_allowances_u10 = salary_data.get('LessAllowancesu10', 0)
             standard_deduction = salary_data.get('StandardDeduction', 0)
             Perquisites = salary_data.get('Perquisites', 0)
             Profit_in_liew_of_salary = salary_data.get('Profit_in_liew_of_salary', 0)
             Entertenment_Allowance = salary_data.get('Entertenment_Allowance', 0)
             Income_from_Ret_Benefit = salary_data.get('Income_from_Ret_Benefit', 0)
+           # Logic for "Less : Allowances u/s 10, Professional Tax" based on the "Regime"
+            if tax_regime.lower() == 'new':
+                professional_tax = 0
+            else:
+                professional_tax = salary_data.get('ProfessionalTax', 0)
+
+            
 
 
             house_property_data = data.get('HouseProperty', {})
@@ -57,7 +58,7 @@ def calculate(request):
             other_sources_data = data.get('OtherSources', {})
             saving_interest = other_sources_data.get('SavingInterest', 0)
             fd_interest = other_sources_data.get('FDInterest', 0)
-            dividend_income = 0
+            dividend_income = other_sources_data.get('DividendIncome', 0)
             other_income = other_sources_data.get('OtherIncome', 0)
 
             Family_Pension = other_sources_data.get('Family_Pension', 0)
@@ -158,10 +159,12 @@ def calculate(request):
             STCG_Normal_1512 = STCG.get('STCG_Normal_1512', 0)
             STCG_Normal_3103 = STCG.get('STCG_Normal_3103', 0)
 
-            # Calculations
-            salary = salary_da + hra_received + other_allowances + \
-                Perquisites + Profit_in_liew_of_salary - less_allowances_u10 - Entertenment_Allowance - professional_tax - Income_from_Ret_Benefit - standard_deduction
+     
 
+            # Calculations
+            salary = salary_da + hra_received + other_allowances + Perquisites + Profit_in_liew_of_salary - less_allowances_u10 - Entertenment_Allowance - professional_tax + Income_from_Ret_Benefit - standard_deduction
+
+            
             house_property = rent_received - property_tax - \
                 rented_house_property_interest_on_hou_loan
             repair_charges = (rent_received - property_tax) * 30 / 100
@@ -173,7 +176,14 @@ def calculate(request):
 
             final_house_property = house_property_1 - self_occupied_interest_on_hou_loan + house_property_2
 
+ 
+
+
+
             business_profession = business + profession
+
+
+
 
             other_sources = saving_interest + fd_interest + dividend_income + other_income + Family_Pension - Deduction_us_57 + Income_from_Ret_Ben_89
 
