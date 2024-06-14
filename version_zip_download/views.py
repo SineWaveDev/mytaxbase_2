@@ -7,7 +7,7 @@ from io import BytesIO
 
 class DownloadZipView(APIView):
     def post(self, request):
-        url = request.data.get('url')
+        url = request.query_params.get('url')
         if not url:
             return Response({"error": "URL is required"}, status=status.HTTP_400_BAD_REQUEST)
 
