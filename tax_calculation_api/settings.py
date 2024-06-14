@@ -61,6 +61,7 @@ INSTALLED_APPS = [
     'Dividend_Data',
     'callback_whatsapp_message',
     'Combined_API_For_ITR1',
+    'version_zip_download',
     'corsheaders',
 
 ]
