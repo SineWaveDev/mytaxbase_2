@@ -6,7 +6,7 @@ from rest_framework import status
 from io import BytesIO
 
 class DownloadZipView(APIView):
-    def post(self, request):
+    def get(self, request):
         url = request.query_params.get('url')
         if not url:
             return Response({"error": "URL is required"}, status=status.HTTP_400_BAD_REQUEST)

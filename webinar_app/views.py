@@ -605,24 +605,28 @@ class CSCRegisterEmail(APIView):
 
 
 
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+import smtplib
+
 class PaymentReminderEmail(APIView):
     def post(self, request, *args, **kwargs):
         # Get parameters from the JSON request body
         email = request.data.get('email')
         amount = request.data.get('amount')
         url = request.data.get('url')
-        discount = request.data.get('discount')
         product = request.data.get('product')
-        customer_name = request.data.get('customer_name')
+        customer_name = request.data.get('customer_name')   
         customer_id = request.data.get('customer_id')
+        customer_alias = request.data.get('customer_alias')
 
         # Construct the email body
-        body = f"Subject: Product Payment \n" \
-               f"Dear M/S {customer_name},\n\n" \
-               f"Please click on the following URL to make a payment:\n\n" \
+        body = f"Subject: Product Payment \n\n" \
+               f"Dear {customer_name},\n\n" \
+               f"Kindly click on the link below to make a payment of Rs.{amount}/- to {product}.\n\n" \
+               f"For your reference, this payment is being made against Customer ID {customer_id} ({customer_alias}).\n\n" \
                f"{url}\n\n" \
-               f"Kindly Click On URL to make a payment of Rs.{amount} Less Discount%{discount} to {product}. " \
-               f"For your reference, this payment would be towards M/S {customer_name} ({customer_id}).\n\n" \
                f"Sinewave Team."
 
         # Email configuration
@@ -638,7 +642,6 @@ class PaymentReminderEmail(APIView):
                 return Response({"message": "Email sent successfully"}, status=status.HTTP_200_OK)
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
 
 
 
