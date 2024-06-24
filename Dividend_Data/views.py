@@ -44,12 +44,18 @@ class StockDataView(APIView):
 
                 # Fetch and filter dividends for the financial year
                 dividends = stock.dividends.reset_index()
+                if 'Date' not in dividends.columns:
+                    return Response({"error": f"Dividends data for {symbol} does not contain 'Date' column."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+                
                 dividends = dividends[(dividends['Date'] >= start_date) & (dividends['Date'] <= end_date)]
                 dividends['Stock'] = symbol
                 all_dividends.append(dividends)
 
                 # Fetch and filter splits for the financial year
                 splits = stock.splits.reset_index()
+                if 'Date' not in splits.columns:
+                    return Response({"error": f"Splits data for {symbol} does not contain 'Date' column."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
                 splits = splits[(splits['Date'] >= start_date) & (splits['Date'] <= end_date)]
                 splits['Stock'] = symbol
                 all_splits.append(splits)

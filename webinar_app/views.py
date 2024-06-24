@@ -629,6 +629,10 @@ class PaymentReminderEmail(APIView):
                f"{url}\n\n" \
                f"Sinewave Team."
 
+
+
+
+
         # Email configuration
         sender_email = "crm@sinewave.co.in"
         receiver_email = email
