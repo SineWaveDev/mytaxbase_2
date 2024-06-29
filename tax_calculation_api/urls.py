@@ -51,4 +51,5 @@ urlpatterns = [
     path('api/', include('Combined_API_For_ITR1.urls')),
     path('api/', include('Whatsapp_API_Error_Control.urls')),
     path('api/', include('version_zip_download.urls')),
+    path('api/', include('sinewave_APP_API.urls')),
 ]

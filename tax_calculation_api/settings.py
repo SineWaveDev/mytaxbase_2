@@ -62,6 +62,7 @@ INSTALLED_APPS = [
     'callback_whatsapp_message',
     'Combined_API_For_ITR1',
     'version_zip_download',
+    'sinewave_APP_API',
     'corsheaders',
 
 ]
