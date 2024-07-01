@@ -12,10 +12,16 @@ import requests
 @api_view(['GET'])
 def get_otp(request):
     data = request.query_params.dict()
-    mobile = data['']
+    
+    # Correcting the key access for 'mobile'
+    mobile = data.get('mobile')
+    if not mobile:
+        return Response({"status": False, "message": "Mobile number is required."}, status=400)
+    
     key = base64.b32encode(mobile.encode())
     otp = pyotp.TOTP(key, digits=6, interval=180)
     otp_str = otp.now()
+    
     if data.get('template_id'):
         template_id = data['template_id']
         sms_data = {"otp": otp_str}
@@ -25,9 +31,10 @@ def get_otp(request):
 
     print(otp_str)
     send_sms("91" + mobile, sms_data, template_id)
-    return Response({"status": True,
-                     "message": "An SMS was sent to your registered mobile number. Please enter the one-time password "
-                                "it contains."})
+    return Response({
+        "status": True,
+        "message": "An SMS was sent to your registered mobile number. Please enter the one-time password it contains."
+    })
 
 
 @api_view(['GET'])
