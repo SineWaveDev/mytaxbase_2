@@ -15,11 +15,11 @@ class SendCampaignAPIView(APIView):
 
         payload = {
             "apiKey": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0ZGRmMmM4MGMzZjY5MGU4MTY3Nzc3OSIsIm5hbWUiOiJTaW5ld2F2ZSBDb21wdXRlciBzZXJ2aWNlcyIsImFwcE5hbWUiOiJBaVNlbnN5IiwiY2xpZW50SWQiOiI2NGRkZjJjODBjM2Y2OTBlODE2Nzc3NzQiLCJhY3RpdmVQbGFuIjoiTk9ORSIsImlhdCI6MTY5MjI2NzIwOH0.r5cHWBFTMs_4F70F4z3bb6MGTmkfSN1oOOM5PSaOUT0",
-            "campaignName": "DSCMassage",
+            "campaignName": "Support1",
             "destination": mobile_number,
             "userName": "Sagar",
             "media": {
-                "url": "https://sinewavedb.s3.ap-south-1.amazonaws.com/WhatsAppImageDSC.jpeg",
+                "url": "https://sinewavedb.s3.ap-south-1.amazonaws.com/ITR+(5).png",
                 "filename": "png"
             }
         }
