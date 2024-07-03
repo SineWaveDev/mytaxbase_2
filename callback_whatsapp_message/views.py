@@ -19,7 +19,7 @@ class SendCampaignAPIView(APIView):
             "destination": mobile_number,
             "userName": "Sagar",
             "media": {
-                "url": "https://sinewavedb.s3.ap-south-1.amazonaws.com/ITR+(6).png",
+                "url": "https://sinewavedb.s3.ap-south-1.amazonaws.com/ITR+(7).png",
                 "filename": "png"
             }
         }

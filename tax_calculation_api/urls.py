@@ -52,4 +52,5 @@ urlpatterns = [
     path('api/', include('Whatsapp_API_Error_Control.urls')),
     path('api/', include('version_zip_download.urls')),
     path('api/', include('sinewave_APP_API.urls')),
+    path('api/', include('sinewave_app_callback_register.urls')),
 ]
