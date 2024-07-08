@@ -53,4 +53,6 @@ urlpatterns = [
     path('api/', include('version_zip_download.urls')),
     path('api/', include('sinewave_APP_API.urls')),
     path('api/', include('sinewave_app_callback_register.urls')),
+    path('api/', include('sinewave_update_profile_api.urls')),
+    path('api/', include('sinewave_app_webinar_registration_api.urls')),
 ]
