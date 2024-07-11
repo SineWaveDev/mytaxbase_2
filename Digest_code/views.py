@@ -17,8 +17,8 @@ def generate_digest(request):
             return JsonResponse({"error": "Invalid JSON payload"})
 
         itr = data.get("ITR", {})
-        itr3 = itr.get("ITR3", {})
-        creation_info = itr3.get("CreationInfo", {})
+        itr1 = itr.get("ITR1", {})
+        creation_info = itr1.get("CreationInfo", {})
         
         digest = creation_info.get("Digest", None)
         sw_created_by = creation_info.get("SWCreatedBy", None)
