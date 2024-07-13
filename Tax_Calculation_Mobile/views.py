@@ -25,14 +25,11 @@ def calculate(request):
             Profit_in_liew_of_salary = salary_data.get('Profit_in_liew_of_salary', 0)
             Entertenment_Allowance = salary_data.get('Entertenment_Allowance', 0)
             Income_from_Ret_Benefit = salary_data.get('Income_from_Ret_Benefit', 0)
-           # Logic for "Less : Allowances u/s 10, Professional Tax" based on the "Regime"
+            # Logic for "Less : Allowances u/s 10, Professional Tax" based on the "Regime"
             if tax_regime.lower() == 'new':
                 professional_tax = 0
             else:
                 professional_tax = salary_data.get('ProfessionalTax', 0)
-
-            
-
 
             house_property_data = data.get('HouseProperty', {})
             if tax_regime.lower() == 'new':
@@ -59,11 +56,32 @@ def calculate(request):
             saving_interest = other_sources_data.get('SavingInterest', 0)
             fd_interest = other_sources_data.get('FDInterest', 0)
             dividend_income = other_sources_data.get('DividendIncome', 0)
-            other_income = other_sources_data.get('OtherIncome', 0)
 
+
+
+          # Additional fields
+
+
+            other_income = other_sources_data.get('OtherIncome', 0)
             Family_Pension = other_sources_data.get('Family_Pension', 0)
             Deduction_us_57  = other_sources_data.get('Deduction_us_57', 0)
-            Income_from_Ret_Ben_89 = other_sources_data.get('Income_from_Ret_Ben_89', 0)
+            Divident = other_sources_data.get('Divident', 0)
+            Unit_Trust_Of_India = other_sources_data.get('UnitTrustOfIndia', 0)
+            Interest_from_deposits_Bank = other_sources_data.get('InterestFromDepositsBank', 0)
+            Interest_on_Saving_Account = other_sources_data.get('InterestOnSavingAccount', 0)
+            Post_Office = other_sources_data.get('PostOffice', 0)
+            National_Savings_Certificate = other_sources_data.get('NationalSavingsCertificate', 0)
+            Kisan_Vikas_Patras = other_sources_data.get('KisanVikasPatras', 0)
+            Debentures = other_sources_data.get('Debentures', 0)
+            Interests_on_Deposits_With_others = other_sources_data.get('InterestsOnDepositsWithOthers', 0)
+            Security_of_Central_State_Government = other_sources_data.get('SecurityOfCentralStateGovernment', 0)
+            Brokerage = other_sources_data.get('Brokerage', 0)
+            Gift = other_sources_data.get('Gift', 0)
+            Income_from_retirement_benefit_account_us_89A = other_sources_data.get('IncomeFromRetirementBenefitAccountUS89A', 0)
+            Income_us_58_59 = other_sources_data.get('IncomeUS58_59', 0)
+            Life_insurance_Policy = other_sources_data.get('LifeInsurancePolicy', 0)
+            Income_due_to_disallowance_of_exemption_under_clauses_of_section_10 = other_sources_data.get('IncomeDueToDisallowanceOfExemptionUnderClausesOfSection10', 0)
+
 
             deduction_via_data = data.get('DeductionVIAeighthC', {})
 
@@ -159,12 +177,9 @@ def calculate(request):
             STCG_Normal_1512 = STCG.get('STCG_Normal_1512', 0)
             STCG_Normal_3103 = STCG.get('STCG_Normal_3103', 0)
 
-     
-
             # Calculations
             salary = salary_da + hra_received + other_allowances + Perquisites + Profit_in_liew_of_salary - less_allowances_u10 - Entertenment_Allowance - professional_tax + Income_from_Ret_Benefit - standard_deduction
 
-            
             house_property = rent_received - property_tax - \
                 rented_house_property_interest_on_hou_loan
             repair_charges = (rent_received - property_tax) * 30 / 100
@@ -173,19 +188,11 @@ def calculate(request):
 
             house_property_2 = Deemed_Let_Out_Rent_Received - Deemed_Let_Out_Property_Tax - Deemed_Let_Out_Interest_on_Hou_Loan - Deemed_Let_Out_Repair_Charges
 
-
             final_house_property = house_property_1 - self_occupied_interest_on_hou_loan + house_property_2
-
- 
-
-
 
             business_profession = business + profession
 
-
-
-
-            other_sources = saving_interest + fd_interest + dividend_income + other_income + Family_Pension - Deduction_us_57 + Income_from_Ret_Ben_89
+            other_sources = other_income + Family_Pension + Divident + Unit_Trust_Of_India + Interest_from_deposits_Bank + Interest_on_Saving_Account + Post_Office + National_Savings_Certificate + Kisan_Vikas_Patras + Debentures + Interests_on_Deposits_With_others + Security_of_Central_State_Government + Brokerage + Gift + Income_from_retirement_benefit_account_us_89A + Income_us_58_59 + Life_insurance_Policy + Income_due_to_disallowance_of_exemption_under_clauses_of_section_10 - Deduction_us_57
 
             deduction_via_data = eighth_lic + eighth_providend_fund + eighth_ppf + eighth_housing_loan_repayment + \
                 eighth_nps + eighth_ells + eighth_tution_fees + eighth_others
@@ -203,8 +210,8 @@ def calculate(request):
                 LTCG_20Per_1506 + LTCG_20Per_1509 + LTCG_20Per_1512 + LTCG_20Per_3103
 
             STCG_total = STCG_15Per_1503 + STCG_15Per_1506 + STCG_15Per_1509 + STCG_15Per_1512 + STCG_15Per_3103 + \
-                STCG_Normal_1503 + STCG_Normal_1506 + STCG_Normal_1509 + \
-                STCG_Normal_1512 + STCG_Normal_3103
+                STCG_Normal_1503 + STCG_Normal_1506 + \
+                STCG_Normal_1509 + STCG_Normal_1512 + STCG_Normal_3103
 
             LTCG_and_STCG_Total = LTCG_total + STCG_total
 
