@@ -67,6 +67,7 @@ INSTALLED_APPS = [
     'sinewave_update_profile_api',
     'sinewave_app_webinar_registration_api',
     'sinewave_app_product_list_api',
+    'sinewave_app_get_profile_details',
     'request_type',
     'corsheaders',
 
