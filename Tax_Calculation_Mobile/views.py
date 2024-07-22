@@ -52,35 +52,47 @@ def calculate(request):
             business = business_profession_data.get('Business', 0)
             profession = business_profession_data.get('Profession', 0)
 
+
+
+
+
             other_sources_data = data.get('OtherSources', {})
-            saving_interest = other_sources_data.get('SavingInterest', 0)
-            fd_interest = other_sources_data.get('FDInterest', 0)
-            dividend_income = other_sources_data.get('DividendIncome', 0)
 
 
-
-          # Additional fields
-
-
-            other_income = other_sources_data.get('OtherIncome', 0)
-            Family_Pension = other_sources_data.get('Family_Pension', 0)
-            Deduction_us_57  = other_sources_data.get('Deduction_us_57', 0)
-            Divident = other_sources_data.get('Divident', 0)
-            Unit_Trust_Of_India = other_sources_data.get('UnitTrustOfIndia', 0)
-            Interest_from_deposits_Bank = other_sources_data.get('InterestFromDepositsBank', 0)
-            Interest_on_Saving_Account = other_sources_data.get('InterestOnSavingAccount', 0)
-            Post_Office = other_sources_data.get('PostOffice', 0)
-            National_Savings_Certificate = other_sources_data.get('NationalSavingsCertificate', 0)
-            Kisan_Vikas_Patras = other_sources_data.get('KisanVikasPatras', 0)
+            # Correctly assign values from other_sources_data to the variables
+            Dividend = other_sources_data.get('Dividend', 0)
+            Unit_Trust_Of_India = other_sources_data.get('Unit_Trust_Of_India', 0)
+            Dividend_u_s_2_22_e = other_sources_data.get('Dividend_u_s_2_22_e', 0)
+            Interest_From_Deposits_Bank = other_sources_data.get('Interest_From_Deposits_Bank', 0)
+            Interest_On_Saving_Account = other_sources_data.get('Interest_On_Saving_Account', 0)
+            Post_Office = other_sources_data.get('Post_Office', 0)
+            National_Savings_Certificate = other_sources_data.get('National_Savings_Certificate', 0)
+            Kisan_Vikas_Patras = other_sources_data.get('Kisan_Vikas_Patras', 0)
             Debentures = other_sources_data.get('Debentures', 0)
-            Interests_on_Deposits_With_others = other_sources_data.get('InterestsOnDepositsWithOthers', 0)
-            Security_of_Central_State_Government = other_sources_data.get('SecurityOfCentralStateGovernment', 0)
+            Interests_On_Deposits_With_Others = other_sources_data.get('Interests_On_Deposits_With_Others', 0)
+            Security_Of_Central_State_Government = other_sources_data.get('Security_Of_Central_State_Government', 0)
+            Interest_on_Income_Details = other_sources_data.get('Interest_on_Income_Details', 0)
+            Pass_Through_Income_Details = other_sources_data.get('Pass_Through_Income_Details', 0)
+            Interest_Accrued_On_Compensation_On_Enhanced_Compensation = other_sources_data.get('Interest_Accrued_On_Compensation_On_Enhanced_Compensation', 0)
+            Interest_Accrued_On_Contribution_To_Provident = other_sources_data.get('Interest_Accrued_On_Contribution_To_Provident', 0)
+            Income_From_Owning_And_Maintaining_Race_Horses = other_sources_data.get('Income_From_Owning_And_Maintaining_Race_Horses', 0)
+            Casual_Income_Lottery = other_sources_data.get('Casual_Income_Lottery', 0)
+            Casual_Income_Others = other_sources_data.get('Casual_Income_Others', 0)
+            Less_Exemption_10_3 = other_sources_data.get('Less_Exemption_10_3', 0)
+            Rental_Income = other_sources_data.get('Rental_Income', 0)
             Brokerage = other_sources_data.get('Brokerage', 0)
+            Family_Pension = other_sources_data.get('Family_Pension', 0)
             Gift = other_sources_data.get('Gift', 0)
-            Income_from_retirement_benefit_account_us_89A = other_sources_data.get('IncomeFromRetirementBenefitAccountUS89A', 0)
-            Income_us_58_59 = other_sources_data.get('IncomeUS58_59', 0)
-            Life_insurance_Policy = other_sources_data.get('LifeInsurancePolicy', 0)
-            Income_due_to_disallowance_of_exemption_under_clauses_of_section_10 = other_sources_data.get('IncomeDueToDisallowanceOfExemptionUnderClausesOfSection10', 0)
+            Other_Income = other_sources_data.get('Other_Income', 0)
+            Income_From_Retirement_Benefit_Account_US_89A = other_sources_data.get('Income_From_Retirement_Benefit_Account_US_89A', 0)
+            Deduction_us_57 = other_sources_data.get('Deduction_us_57', 0)
+            Income_US_58_59 = other_sources_data.get('Income_US_58_59', 0)
+            Life_Insurance_Policy = other_sources_data.get('Life_Insurance_Policy', 0)
+            Income_Due_To_Disallowance_Of_Exemption_Under_Clauses_Of_Section_10 = other_sources_data.get('Income_Due_To_Disallowance_Of_Exemption_Under_Clauses_Of_Section_10', 0)
+            Specified_Sum_Received_By_Unit_Holder_From_Business_Trust_in_Sec_56_2_xii = other_sources_data.get('Specified_Sum_Received_By_Unit_Holder_From_Business_Trust_in_Sec_56_2_xii', 0)
+            Sum_Received_Under_Life_Insurance_Policy_Sec_56_2_xii  = other_sources_data.get('Sum_Received_Under_Life_Insurance_Policy_Sec_56_2_xii', 0)
+
+        
 
 
             deduction_via_data = data.get('DeductionVIAeighthC', {})
@@ -192,7 +204,19 @@ def calculate(request):
 
             business_profession = business + profession
 
-            other_sources = other_income + Family_Pension + Divident + Unit_Trust_Of_India + Interest_from_deposits_Bank + Interest_on_Saving_Account + Post_Office + National_Savings_Certificate + Kisan_Vikas_Patras + Debentures + Interests_on_Deposits_With_others + Security_of_Central_State_Government + Brokerage + Gift + Income_from_retirement_benefit_account_us_89A + Income_us_58_59 + Life_insurance_Policy + Income_due_to_disallowance_of_exemption_under_clauses_of_section_10 - Deduction_us_57
+             # Compute the total other_sources with deductions
+            other_sources = (
+                Dividend + Unit_Trust_Of_India + Dividend_u_s_2_22_e + Interest_From_Deposits_Bank + Interest_On_Saving_Account +
+                Post_Office + National_Savings_Certificate + Kisan_Vikas_Patras + Debentures + Interests_On_Deposits_With_Others +
+                Security_Of_Central_State_Government + Interest_on_Income_Details + Pass_Through_Income_Details +
+                Interest_Accrued_On_Compensation_On_Enhanced_Compensation + Interest_Accrued_On_Contribution_To_Provident +
+                Income_From_Owning_And_Maintaining_Race_Horses + Casual_Income_Lottery + Casual_Income_Others + Less_Exemption_10_3 +
+                Rental_Income + Brokerage + Family_Pension + Gift + Other_Income + Income_From_Retirement_Benefit_Account_US_89A +
+                Income_US_58_59 + Life_Insurance_Policy + Income_Due_To_Disallowance_Of_Exemption_Under_Clauses_Of_Section_10 +
+                Specified_Sum_Received_By_Unit_Holder_From_Business_Trust_in_Sec_56_2_xii + Sum_Received_Under_Life_Insurance_Policy_Sec_56_2_xii -
+                Deduction_us_57
+            )
+
 
             deduction_via_data = eighth_lic + eighth_providend_fund + eighth_ppf + eighth_housing_loan_repayment + \
                 eighth_nps + eighth_ells + eighth_tution_fees + eighth_others
