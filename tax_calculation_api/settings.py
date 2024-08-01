@@ -68,6 +68,7 @@ INSTALLED_APPS = [
     'sinewave_app_webinar_registration_api',
     'sinewave_app_product_list_api',
     'sinewave_app_get_profile_details',
+    'AIS_PDF_Read',
     'request_type',
     'corsheaders',
 
