@@ -682,3 +682,63 @@ class Paymentmailtosanjay(APIView):
                 return Response({"message": "Email sent successfully"}, status=status.HTTP_200_OK)
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+
+
+
+
+
+
+
+class SendEmailTeamControlCredentialsAPI(APIView):
+    def post(self, request, *args, **kwargs):
+        # Get parameters from the URL query parameters
+        employee_name = request.query_params.get('employee_name')
+        email = request.query_params.get('email')
+        company_name = request.query_params.get('company_name')
+        url = request.query_params.get('url')
+        login_id = request.query_params.get('login_id')
+        password = request.query_params.get('password')
+        company_code = request.query_params.get('company_code')
+
+        # Email configuration
+        sender_email = "crm@sinewave.co.in"
+        receiver_email = email
+        subject = "About Team Control Credentials"
+
+        # Construct the email body
+        body = (
+            f"Dear {employee_name},\n\n"
+            f"Your Credentials for {company_name} Team Control are as following:\n"
+            f"URL: {url}\n"
+            f"Company Code: {company_code}\n"
+            f"Username: {login_id}\n"
+            f"Password: {password}\n\n"
+            f"Thanking you,\nYour truly,\nAdministrator,\n{company_name}"
+        )
+
+        # Gmail SMTP server and port
+        smtp_server = "smtp.gmail.com"
+        smtp_port = 587
+
+        # Your Gmail account credentials
+        username = "crm@sinewave.co.in"
+        password = "fzjv eaaj kdcv svqr" 
+
+        # Create the email message
+        message = MIMEMultipart()
+        message["From"] = sender_email
+        message["To"] = receiver_email
+        message["Subject"] = subject
+        message.attach(MIMEText(body, "plain"))
+
+        # Connect to the SMTP server and send the email
+        try:
+            with smtplib.SMTP(smtp_server, smtp_port) as server:
+                server.starttls()
+                server.login(username, password)
+                server.sendmail(sender_email, [receiver_email], message.as_string())
+
+            return Response({"message": "Email sent successfully"}, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
