@@ -742,3 +742,218 @@ class SendEmailTeamControlCredentialsAPI(APIView):
             return Response({"message": "Email sent successfully"}, status=status.HTTP_200_OK)
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+
+
+
+class SendEmailAPIHTML3(APIView):
+    def post(self, request, *args, **kwargs):
+        # Get parameters from the URL query parameters
+        name = request.query_params.get('name')
+        email = request.query_params.get('email')
+        Product = request.query_params.get('Product')
+        Invoice_No = request.query_params.get('Invoice_No')
+        Invoice_Date = request.query_params.get('Invoice_Date')
+        Invoice_Amount = request.query_params.get('Invoice_Amount')
+        
+
+        # New Email content with the AUC Fees acknowledgment template
+        email_content = f"""
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Acknowledgment of AUC Fees</title>
+            <style>
+                body {{
+                    font-family: Arial, sans-serif;
+                    color: #333;
+                    background-color: #f4f4f4;
+                    margin: 0;
+                    padding: 0;
+                }}
+                .container {{
+                    width: 90%;
+                    max-width: 600px;
+                    margin: 0 auto;
+                    background-color: #ffffff;
+                    padding: 20px;
+                    border-radius: 8px;
+                    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                    border: 3px solid #4CAF50;
+                }}
+                .header {{
+                    background-color: #4CAF50;
+                    color: white;
+                    text-align: center;
+                    padding: 15px 0;
+                    border-radius: 8px 8px 0 0;
+                }}
+                .content {{
+                    padding: 20px 0;
+                }}
+                .content p {{
+                    margin: 10px 0;
+                    line-height: 1.6;
+                    color: #333;
+                }}
+                .content ol {{
+                    margin: 10px 0;
+                    padding-left: 20px;
+                }}
+                .content ol li {{
+                    margin: 5px 0;
+                }}
+                .product-table {{
+                    width: 100%;
+                    border-collapse: collapse;
+                    margin: 20px 0;
+                }}
+                .product-table th, .product-table td {{
+                    border: 1px solid #ddd;
+                    padding: 8px;
+                    text-align: left;
+                }}
+                .product-table th {{
+                    background-color: #4CAF50;
+                    color: white;
+                }}
+                .footer {{
+                    background-color: #f1f1f1;
+                    padding: 20px;
+                    text-align: left;
+                    border-radius: 0 0 8px 8px;
+                    font-size: 14px;
+                    color: #777;
+                }}
+                .footer-box {{
+                    background-color: #4CAF50;
+                    color: white;
+                    padding: 15px;
+                    border-radius: 8px;
+                    text-align: center;
+                }}
+                .footer-box p {{
+                    margin: 5px 0;
+                }}
+                .footer-box .contact-info {{
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    font-size: 14px;
+                    flex-wrap: wrap;
+                }}
+                .footer-box .contact-info div {{
+                    flex: 1;
+                    text-align: center;
+                    padding: 5px;
+                }}
+                
+                /* Media Queries for Responsiveness */
+                @media only screen and (max-width: 600px) {{
+                    .container {{
+                        width: 95%;
+                        padding: 10px;
+                    }}
+                    .product-table th, .product-table td {{
+                        padding: 5px;
+                        font-size: 12px;
+                    }}
+                    .header {{
+                        font-size: 18px;
+                        padding: 10px;
+                    }}
+                    .content p {{
+                        font-size: 14px;
+                    }}
+                    .footer-box .contact-info {{
+                        flex-direction: column;
+                        text-align: center;
+                    }}
+                    .footer-box .contact-info div {{
+                        margin-bottom: 10px;
+                    }}
+                }}
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <div class="header">
+                    <h2>Acknowledgment of AUC Fees Received</h2>
+                </div>
+                <div class="content">
+                    <p>Dear {name},</p>
+
+                    <p>Thank you for being a part of the Sinewave family by trusting us and becoming a valued customer.</p>
+                    <p>We hope things are going great. In case you need any help, you are requested to:</p>
+                    <ol>
+                        <li>Call our Customer Support at <strong>020-49091000</strong> and raise a ticket for your issue.</li>
+                        <li>Email us at: <a href="mailto:crm@sinewave.co.in" style="color: #4CAF50;">crm@sinewave.co.in</a></li>
+                    </ol>
+                    <p>We assure you that we will resolve any issues as soon as possible.</p>
+
+                    <p>We acknowledge receipt of the AUC fees. Please find the attached tax invoice for your records.</p>
+
+                    <table class="product-table">
+                        <tr>
+                            <th>Sr. No</th>
+                            <th>Product</th>
+                            <th>Invoice No</th>
+                            <th>Invoice Date</th>
+                            <th>Invoice Amount</th>
+                        </tr>
+                        <tr>
+                            <td>1</td>
+                            <td>{Product}</td>
+                            <td>{Invoice_No}</td>
+                            <td>{Invoice_Date}</td>
+                            <td>{Invoice_Amount}</td>
+                        </tr>
+                    </table>
+
+                    <p>Should you have any questions or require further information, feel free to contact us.</p>
+
+                    <p>Thank you for your prompt payment.</p>
+
+                    <p>In case of any queries, kindly revert back to this email.</p>
+
+                    <br>
+                </div>
+                <div class="footer">
+                    <div class="footer-box">
+                        <div class="contact-info">
+                            <div><strong>Email</strong><br>crm@sinewave.co.in</div>
+                            <div><strong>Contact</strong><br>020- 49091000</div>
+                            <div><strong>Visit Us At</strong><br>www.sinewave.co.in</div>
+                        </div>
+                        <p>Address: T-22, Third Floor, Super Mall, Salunke Vihar Road, Wanowrie, Pune - 411 040.</p>
+                    </div>
+                </div>
+            </div>
+        </body>
+        </html>
+        """
+
+        # Email configuration
+        sender_email = "accounts@sinewave.co.in"
+        receiver_email = email
+        subject = "Acknowledgment of AUC Fees Received"
+        
+        # Create a multipart message and set headers
+        message = MIMEMultipart()
+        message['From'] = sender_email
+        message['To'] = receiver_email
+        message['Subject'] = subject
+
+        # Attach HTML content to the email
+        message.attach(MIMEText(email_content, 'html'))
+
+        # Send the email
+        with smtplib.SMTP('smtp.gmail.com', 587) as server:
+            server.starttls()
+            server.login('accounts@sinewave.co.in', 'nuag qypq xuwi rqev')
+            text = message.as_string()
+            server.sendmail(sender_email, receiver_email, text)
+            return Response({"message": "Email sent successfully"}, status=status.HTTP_200_OK)
