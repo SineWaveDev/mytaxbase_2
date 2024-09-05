@@ -745,8 +745,6 @@ class SendEmailTeamControlCredentialsAPI(APIView):
 
 
 
-
-
 class SendEmailAPIHTML3(APIView):
     def post(self, request, *args, **kwargs):
         # Get parameters from the URL query parameters
@@ -756,8 +754,8 @@ class SendEmailAPIHTML3(APIView):
         Invoice_No = request.query_params.get('Invoice_No')
         Invoice_Date = request.query_params.get('Invoice_Date')
         Invoice_Amount = request.query_params.get('Invoice_Amount')
+        details_url = request.query_params.get('details_url')  # Get URL parameter
         
-
         # New Email content with the AUC Fees acknowledgment template
         email_content = f"""
         <!DOCTYPE html>
@@ -894,7 +892,7 @@ class SendEmailAPIHTML3(APIView):
                     </ol>
                     <p>We assure you that we will resolve any issues as soon as possible.</p>
 
-                    <p>We acknowledge receipt of the AUC fees. Please find the attached tax invoice for your records.</p>
+                    <p>We acknowledge receipt of the AUC fees. Please find the attached tax invoice for your records. <a href="{details_url}" style="color: #4CAF50;">Click Here</a>.</p>
 
                     <table class="product-table">
                         <tr>
@@ -953,7 +951,7 @@ class SendEmailAPIHTML3(APIView):
         # Send the email
         with smtplib.SMTP('smtp.gmail.com', 587) as server:
             server.starttls()
-            server.login('accounts@sinewave.co.in', 'nuag qypq xuwi rqev')
+            server.login('accounts@sinewave.co.in', 'nuag qypq xuwi rqev')  # Make sure to replace this with your actual password
             text = message.as_string()
             server.sendmail(sender_email, receiver_email, text)
             return Response({"message": "Email sent successfully"}, status=status.HTTP_200_OK)
