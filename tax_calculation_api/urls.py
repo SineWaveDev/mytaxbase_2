@@ -59,5 +59,7 @@ urlpatterns = [
     path('api/', include('sinewave_app_get_profile_details.urls')),
     path('api/', include('request_type.urls')),
     path('api/', include('AIS_PDF_Read.urls')),
+    path('api/', include('pan_verification_api.urls')),
+    
     
 ]

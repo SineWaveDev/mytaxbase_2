@@ -69,6 +69,7 @@ INSTALLED_APPS = [
     'sinewave_app_product_list_api',
     'sinewave_app_get_profile_details',
     'AIS_PDF_Read',
+    'pan_verification_api',
     'request_type',
     'corsheaders',
 
