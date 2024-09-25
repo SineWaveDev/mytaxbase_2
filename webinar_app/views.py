@@ -955,3 +955,58 @@ class SendEmailAPIHTML3(APIView):
             text = message.as_string()
             server.sendmail(sender_email, receiver_email, text)
             return Response({"message": "Email sent successfully"}, status=status.HTTP_200_OK)
+
+
+class SendLicenseEmailAPI(APIView):
+    def post(self, request, *args, **kwargs):
+        # Get parameters from the URL query parameters
+        internal_customer_id = request.query_params.get('internal_customer_id')
+        product_name = request.query_params.get('product_name')
+        user_code = request.query_params.get('user_code')
+        key_code = request.query_params.get('key_code')
+        password = request.query_params.get('password')
+        email = request.query_params.get('email')
+
+        # Email configuration
+        sender_email = "crm@sinewave.co.in"
+        receiver_email = email
+        subject = "License Information for In-house Testing"
+
+        # Construct the email body
+        body = (
+            f"Dear Employee,\n\n"
+            f"Here are your license details for testing purposes:\n\n"
+            f"Internal Customer ID: {internal_customer_id}\n"
+            f"Product Name: {product_name}\n"
+            f"User Code: {user_code}\n"
+            f"Key Code: {key_code}\n"
+            f"Password: {password}\n\n"
+            f"This license is for in-house employees for testing purposes.\n\n"
+            f"Thank you,\nAdministrator"
+        )
+
+        # Gmail SMTP server and port
+        smtp_server = "smtp.gmail.com"
+        smtp_port = 587
+
+        # Your Gmail account credentials
+        username = "crm@sinewave.co.in"
+        email_password = "fzjv eaaj kdcv svqr"  # Ensure to secure your password
+
+        # Create the email message
+        message = MIMEMultipart()
+        message["From"] = sender_email
+        message["To"] = receiver_email
+        message["Subject"] = subject
+        message.attach(MIMEText(body, "plain"))
+
+        # Connect to the SMTP server and send the email
+        try:
+            with smtplib.SMTP(smtp_server, smtp_port) as server:
+                server.starttls()
+                server.login(username, email_password)
+                server.sendmail(sender_email, [receiver_email], message.as_string())
+
+            return Response({"message": "Email sent successfully"}, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
