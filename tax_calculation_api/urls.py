@@ -60,6 +60,8 @@ urlpatterns = [
     path('api/', include('request_type.urls')),
     path('api/', include('AIS_PDF_Read.urls')),
     path('api/', include('pan_verification_api.urls')),
+    path('api/', include('TDS_Validate_Challan_API.urls')),
+    path('api/', include('MIS_Rights_API.urls')),
     
     
 ]

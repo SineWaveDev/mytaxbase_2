@@ -70,6 +70,8 @@ INSTALLED_APPS = [
     'sinewave_app_get_profile_details',
     'AIS_PDF_Read',
     'pan_verification_api',
+    'TDS_Validate_Challan_API',
+    'MIS_Rights_API',
     'request_type',
     'corsheaders',
 
