@@ -960,6 +960,7 @@ class SendEmailAPIHTML3(APIView):
 class SendLicenseEmailAPI(APIView):
     def post(self, request, *args, **kwargs):
         # Get parameters from the URL query parameters
+        name = request.query_params.get('name')
         internal_customer_id = request.query_params.get('internal_customer_id')
         product_name = request.query_params.get('product_name')
         user_code = request.query_params.get('user_code')
@@ -974,7 +975,7 @@ class SendLicenseEmailAPI(APIView):
 
         # Construct the email body
         body = (
-            f"Dear Employee,\n\n"
+            f"Dear {name},\n\n"
             f"Here are your license details for testing purposes:\n\n"
             f"Internal Customer ID: {internal_customer_id}\n"
             f"Product Name: {product_name}\n"
