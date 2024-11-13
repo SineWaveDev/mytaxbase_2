@@ -1018,19 +1018,15 @@ class SendLicenseEmailAPI(APIView):
 
 class webinar_2(APIView):
     def post(self, request, *args, **kwargs):
-        # Check if the request data is not None
-        if not request.data:
-            return Response({"error": "Request body is empty or not properly formatted."}, status=status.HTTP_400_BAD_REQUEST)
-
-        # Get customer name and email from the JSON request body
-        customer_name = request.data.get('customer_name')
-        email = request.data.get('email')
-        webinar_subject = request.data.get('webinar_subject')  # Provide a default value if not specified
-        feedback_link = request.data.get('feedback_link')  # Provide a default value or update accordingly
+        # Get customer name, email, and other parameters from query parameters or form data
+        customer_name = request.query_params.get('customer_name') or request.POST.get('customer_name')
+        email = request.query_params.get('email') or request.POST.get('email')
+        webinar_subject = request.query_params.get('webinar_subject') or request.POST.get('webinar_subject', 'Our Webinar')  # Provide default value
+        feedback_link = request.query_params.get('feedback_link') or request.POST.get('feedback_link', 'https://default-feedback-link.com')  # Provide default value
 
         if not customer_name or not email:
             return Response({"error": "Customer name and email are required."}, status=status.HTTP_400_BAD_REQUEST)
-        
+
         # Construct the new email body
         body = f"""Subject: Thank You for Attending Our Webinar\n\n
                 Dear {customer_name},\n\n
