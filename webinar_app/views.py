@@ -1011,3 +1011,48 @@ class SendLicenseEmailAPI(APIView):
             return Response({"message": "Email sent successfully"}, status=status.HTTP_200_OK)
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+
+
+
+class webinar_2(APIView):
+    def post(self, request, *args, **kwargs):
+        # Check if the request data is not None
+        if not request.data:
+            return Response({"error": "Request body is empty or not properly formatted."}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Get customer name and email from the JSON request body
+        customer_name = request.data.get('customer_name')
+        email = request.data.get('email')
+        webinar_subject = request.data.get('webinar_subject')  # Provide a default value if not specified
+        feedback_link = request.data.get('feedback_link')  # Provide a default value or update accordingly
+
+        if not customer_name or not email:
+            return Response({"error": "Customer name and email are required."}, status=status.HTTP_400_BAD_REQUEST)
+        
+        # Construct the new email body
+        body = f"""Subject: Thank You for Attending Our Webinar\n\n
+                Dear {customer_name},\n\n
+                Thank you for attending our webinar: {webinar_subject}.\n\n
+                We always strive to ensure you understand our application and have all your doubts clarified.\n
+                We also improve our software based on your valuable inputs.\n\n
+                So please fill out the feedback form with your rating and training expectations.\n\n
+                [Click here to provide feedback]({feedback_link})\n\n
+                Thanks & Regards,\n
+                Sinewave Team.
+                """
+
+        # Email configuration
+        sender_email = "crm@sinewave.co.in"
+        receiver_email = email
+
+        # Send the email
+        try:
+            with smtplib.SMTP('smtp.gmail.com', 587) as server:
+                server.starttls()
+                server.login(sender_email, 'fzjv eaaj kdcv svqr')  # Be sure to use a valid app password
+                server.sendmail(sender_email, receiver_email, body)
+                return Response({"message": "Email sent successfully"}, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

@@ -62,6 +62,6 @@ urlpatterns = [
     path('api/', include('pan_verification_api.urls')),
     path('api/', include('TDS_Validate_Challan_API.urls')),
     path('api/', include('MIS_Rights_API.urls')),
-    
+    path('api/', include('Customer_Membership.urls')),
     
 ]

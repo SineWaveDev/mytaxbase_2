@@ -71,9 +71,11 @@ INSTALLED_APPS = [
     'AIS_PDF_Read',
     'pan_verification_api',
     'TDS_Validate_Challan_API',
+    'Customer_Membership',
     'MIS_Rights_API',
     'request_type',
     'corsheaders',
+    
 
 ]
 
