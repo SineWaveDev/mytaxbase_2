@@ -1052,3 +1052,46 @@ class webinar_2(APIView):
                 return Response({"message": "Email sent successfully"}, status=status.HTTP_200_OK)
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+
+
+
+
+
+
+class Helpline_Feedback(APIView):
+    def post(self, request, *args, **kwargs):
+        # Get customer name and email from query parameters only
+        customer_name = request.query_params.get('customer_name')
+        email = request.query_params.get('email')
+        feedback_link = request.query_params.get('feedback_link')
+
+        if not customer_name or not email:
+            return Response({"error": "Customer name and email are required."}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Construct the new email body
+        body = f"""Subject: We Value Your Feedback\n
+                Dear {customer_name},\n
+                Thank you for contacting us. We hope your query has been resolved successfully and that you are happy with the solution provided.\n
+                Your valuable feedback helps us improve our services and software.\n
+                Kindly click on the link below to submit your valuable suggestions:\n
+                {feedback_link}\n
+                Thanks & Regards,\n
+                Sinewave Team.
+                """
+
+        # Email configuration
+        sender_email = "crm@sinewave.co.in"
+        receiver_email = email
+
+        # Send the email
+        try:
+            with smtplib.SMTP('smtp.gmail.com', 587) as server:
+                server.starttls()
+                server.login(sender_email, 'fzjv eaaj kdcv svqr')  # Be sure to use a valid app password
+                server.sendmail(sender_email, receiver_email, body)
+                return Response({"message": "Email sent successfully"}, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
