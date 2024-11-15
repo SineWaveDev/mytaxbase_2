@@ -1017,7 +1017,7 @@ class SendLicenseEmailAPI(APIView):
 
 
 class webinar_2(APIView):
-    def post(self, request, *args, **kwargs):
+    def get(self, request, *args, **kwargs):
         # Get customer name, email, and other parameters from query parameters or form data
         customer_name = request.query_params.get('customer_name') or request.POST.get('customer_name')
         email = request.query_params.get('email') or request.POST.get('email')
@@ -1061,7 +1061,7 @@ class webinar_2(APIView):
 
 
 class Helpline_Feedback(APIView):
-    def post(self, request, *args, **kwargs):
+    def get(self, request, *args, **kwargs):
         # Get customer name and email from query parameters only
         customer_name = request.query_params.get('customer_name')
         email = request.query_params.get('email')
