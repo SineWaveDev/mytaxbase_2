@@ -16,48 +16,46 @@ class CheckDeptLevelAPI(APIView):
         except (ValueError, TypeError):
             return Response({"error": "mlevel must be a number"}, status=status.HTTP_400_BAD_REQUEST)
 
-        # Extract department conditions and mlevel conditions using regex
-        if input_condition:
-            # Extract mDept conditions
-            dept_pattern = re.compile(r"strDepttype\s*==\s*\"([^\"]+)\"")
-            extracted_depts = dept_pattern.findall(input_condition)
+        # Validate input_condition presence
+        if not input_condition:
+            return Response({"error": "Invalid input: 'input' condition missing"}, status=status.HTTP_400_BAD_REQUEST)
 
-            # Extract mlevel conditions
-            mlevel_pattern = re.compile(r"intlevel\s*(<=|<|>|>=|==)\s*(\d+)")
-            extracted_levels = [(match[0], int(match[1])) for match in mlevel_pattern.findall(input_condition)]
-        else:
-            extracted_depts = []
-            extracted_levels = []
+        # Evaluate conditions using extracted data
+        def evaluate_expression(expression):
+            """
+            Evaluates a logical expression with mlevel and mDept values.
+            """
+            # Replace variable placeholders with their actual values
+            expression = expression.replace('mLevel', str(mlevel))
+            expression = expression.replace("mDept", f"'{mDept}'")
 
-        # Check if mDept, mlevel, and input_condition are valid
-        if input_condition and mDept is not None and mlevel is not None:
-            # Evaluate conditions based on the extracted rules
-            condition_met = False
+            # Use regex to replace equality checks for string matches to proper Python conditions
+            expression = re.sub(r"strDepttype\s*==\s*\"([^\"]+)\"", lambda match: f"'{mDept}' == '{match.group(1)}'", expression)
 
-            # Check mlevel conditions
-            for operator, value in extracted_levels:
-                if operator == "<" and mlevel < value:
-                    condition_met = True
-                elif operator == "<=" and mlevel <= value:
-                    condition_met = True
-                elif operator == ">" and mlevel > value:
-                    condition_met = True
-                elif operator == ">=" and mlevel >= value:
-                    condition_met = True
-                elif operator == "==" and mlevel == value:
-                    condition_met = True
+            try:
+                # Evaluate the expression safely (basic check)
+                result = eval(expression)
+                return result
+            except Exception as e:
+                return False
 
-            # Check mDept conditions
-            if mDept in extracted_depts:
+        # Split and handle complex conditions with '||' and '&&'
+        conditions = re.split(r'\|\||&&', input_condition)
+        condition_met = False
+
+        # Handle logical operations based on condition structure
+        or_conditions = input_condition.split('||')
+        for or_condition in or_conditions:
+            and_conditions = or_condition.split('&&')
+            if all(evaluate_expression(and_cond.strip()) for and_cond in and_conditions):
                 condition_met = True
+                break
 
-            # Final evaluation of all conditions
-            if condition_met:
-                return Response({"result": "true"}, status=status.HTTP_200_OK)
-            else:
-                return Response({"result": "false"}, status=status.HTTP_200_OK)
+        # Return the result based on condition evaluation
+        if condition_met:
+            return Response({"result": "true"}, status=status.HTTP_200_OK)
         else:
-            return Response({"error": "Invalid input"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"result": "false"}, status=status.HTTP_200_OK)
 
 
 
