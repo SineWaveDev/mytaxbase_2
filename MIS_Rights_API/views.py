@@ -58,3 +58,70 @@ class CheckDeptLevelAPI(APIView):
                 return Response({"result": "false"}, status=status.HTTP_200_OK)
         else:
             return Response({"error": "Invalid input"}, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+# from rest_framework.views import APIView
+# from rest_framework.response import Response
+# from rest_framework import status
+# import re
+
+# class CheckDeptLevelAPI(APIView):
+#     def post(self, request):
+#         # Extract JSON data from the request body
+#         input_condition = request.data.get('input', None)
+#         mDept = request.data.get('mDept', None)
+#         mlevel = request.data.get('mlevel', None)
+
+#         # Ensure mlevel is an integer for comparison
+#         if isinstance(mlevel, int):
+#             # mlevel is already an integer
+#             pass
+#         elif isinstance(mlevel, str) and mlevel.isdigit():
+#             # Convert valid string representations of numbers
+#             mlevel = int(mlevel)
+#         else:
+#             return Response({"error": "mlevel must be a number"}, status=status.HTTP_400_BAD_REQUEST)
+
+#         # Extract department conditions and mlevel conditions using regex
+#         if input_condition:
+#             # Extract mDept conditions
+#             dept_pattern = re.compile(r"strDepttype\s*==\s*\"([^\"]+)\"")
+#             extracted_depts = dept_pattern.findall(input_condition)
+
+#             # Extract mlevel conditions
+#             mlevel_pattern = re.compile(r"intlevel\s*(<=|<|>|>=|==)\s*(\d+)")
+#             extracted_levels = [(match[0], int(match[1])) for match in mlevel_pattern.findall(input_condition)]
+#         else:
+#             extracted_depts = []
+#             extracted_levels = []
+
+#         # Check if mDept, mlevel, and input_condition are valid
+#         if input_condition and mDept is not None and mlevel is not None:
+#             # Evaluate conditions based on the extracted rules
+#             condition_met = False
+
+#             # Check mlevel conditions
+#             for operator, value in extracted_levels:
+#                 if operator == "<" and mlevel < value:
+#                     condition_met = True
+#                 elif operator == "<=" and mlevel <= value:
+#                     condition_met = True
+#                 elif operator == ">" and mlevel > value:
+#                     condition_met = True
+#                 elif operator == ">=" and mlevel >= value:
+#                     condition_met = True
+#                 elif operator == "==" and mlevel == value:
+#                     condition_met = True
+
+#             # Check mDept conditions
+#             if mDept in extracted_depts:
+#                 condition_met = True
+
+#             # Final evaluation of all conditions
+#             if condition_met:
+#                 return Response({"result": "true"}, status=status.HTTP_200_OK)
+#             else:
+#                 return Response({"result": "false"}, status=status.HTTP_200_OK)
+#         else:
+#             return Response({"error": "Invalid input"}, status=status.HTTP_400_BAD_REQUEST)

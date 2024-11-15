@@ -1018,22 +1018,23 @@ class SendLicenseEmailAPI(APIView):
 
 class webinar_2(APIView):
     def get(self, request, *args, **kwargs):
-        # Get customer name, email, and other parameters from query parameters or form data
-        customer_name = request.query_params.get('customer_name') or request.POST.get('customer_name')
-        email = request.query_params.get('email') or request.POST.get('email')
-        webinar_subject = request.query_params.get('webinar_subject') or request.POST.get('webinar_subject', 'Our Webinar')  # Provide default value
-        feedback_link = request.query_params.get('feedback_link') or request.POST.get('feedback_link', 'https://default-feedback-link.com')  # Provide default value
+        # Get customer name, email, and other parameters from JSON request body
+        customer_name = request.data.get('customer_name')
+        email = request.data.get('email')
+        webinar_subject = request.data.get('webinar_subject', 'Our Webinar')  # Default value if not provided
+        feedback_link = request.data.get('feedback_link', 'https://default-feedback-link.com')  # Default value if not provided
 
+        # Validate the required parameters
         if not customer_name or not email:
             return Response({"error": "Customer name and email are required."}, status=status.HTTP_400_BAD_REQUEST)
 
         # Construct the new email body
         body = f"""Subject: Thank You for Attending Our Webinar\n\n
-                Dear {customer_name},\n\n
-                Thank you for attending our webinar: {webinar_subject}.\n\n
+                Dear {customer_name},\n
+                Thank you for attending our webinar: {webinar_subject}.\n
                 We always strive to ensure you understand our application and have all your doubts clarified.\n
-                We also improve our software based on your valuable inputs.\n\n
-                So please fill out the feedback form with your rating and training expectations.\n\n
+                We also improve our software based on your valuable inputs.\n
+                So please fill out the feedback form with your rating and training expectations.\n
                 [Click here to provide feedback]({feedback_link})\n\n
                 Thanks & Regards,\n
                 Sinewave Team.
