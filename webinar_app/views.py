@@ -1014,47 +1014,64 @@ class SendLicenseEmailAPI(APIView):
 
 
 
-
-
 class webinar_2(APIView):
     def get(self, request, *args, **kwargs):
-        # Get customer name, email, and other parameters from JSON request body
-        customer_name = request.data.get('customer_name')
-        email = request.data.get('email')
-        webinar_subject = request.data.get('webinar_subject', 'Our Webinar')  # Default value if not provided
-        feedback_link = request.data.get('feedback_link', 'https://default-feedback-link.com')  # Default value if not provided
+        # Get parameters from URL query params instead of JSON body
+        customer_name = request.query_params.get('customer_name')
+        email = request.query_params.get('email')
+        webinar_subject = request.query_params.get('webinar_subject', 'Our Webinar')  # Default value if not provided
+        c_value = request.query_params.get('c')  # Retrieve C value
+        w_value = request.query_params.get('w')  # Retrieve W value
 
         # Validate the required parameters
         if not customer_name or not email:
             return Response({"error": "Customer name and email are required."}, status=status.HTTP_400_BAD_REQUEST)
+        if not c_value or not w_value:
+            return Response({"error": "C and W values are required."}, status=status.HTTP_400_BAD_REQUEST)
 
-        # Construct the new email body
-        body = f"""Subject: Thank You for Attending Our Webinar\n\n
-                Dear {customer_name},\n
-                Thank you for attending our webinar: {webinar_subject}.\n
-                We always strive to ensure you understand our application and have all your doubts clarified.\n
-                We also improve our software based on your valuable inputs.\n
-                So please fill out the feedback form with your rating and training expectations.\n
-                [Click here to provide feedback]({feedback_link})\n\n
-                Thanks & Regards,\n
-                Sinewave Team.
-                """
+        # Construct the feedback link using C and W values
+        feedback_link = f'http://www.sinewave.co.in/ExistingUser/Webinar-feedback.aspx?C={c_value}&W={w_value}'
+
+        # Construct the new email body with HTML content
+        body = f"""
+        <html>
+            <body>
+                <p>Dear {customer_name},</p>
+                <p>Thank you for attending our webinar: {webinar_subject}.</p>
+                <p>We always strive to ensure you understand our application and have all your doubts clarified.<br>
+                We also improve our software based on your valuable inputs.</p>
+                <p>So please fill out the feedback form with your rating and training expectations.<br>
+                <a href="{feedback_link}">Click here to provide feedback</a></p>
+                <p>Thanks & Regards,<br>
+                Sinewave Team.</p>
+            </body>
+        </html>
+        """
 
         # Email configuration
         sender_email = "crm@sinewave.co.in"
         receiver_email = email
 
-        # Send the email
+        # Send the email with HTML content
         try:
+            from email.mime.text import MIMEText
+            from email.mime.multipart import MIMEMultipart
+
+            msg = MIMEMultipart("alternative")
+            msg["Subject"] = "Thank You for Attending Our Webinar"
+            msg["From"] = sender_email
+            msg["To"] = receiver_email
+
+            # Attach the HTML body to the email
+            msg.attach(MIMEText(body, "html"))
+
             with smtplib.SMTP('smtp.gmail.com', 587) as server:
                 server.starttls()
                 server.login(sender_email, 'fzjv eaaj kdcv svqr')  # Be sure to use a valid app password
-                server.sendmail(sender_email, receiver_email, body)
+                server.sendmail(sender_email, receiver_email, msg.as_string())
                 return Response({"message": "Email sent successfully"}, status=status.HTTP_200_OK)
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-
 
 
 

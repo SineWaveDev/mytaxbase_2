@@ -25,7 +25,7 @@ class CheckDeptLevelAPI(APIView):
             # Check if mlevel < 10 or if mDept matches any of the specified departments
             if mlevel < 10:
                 return True  # True if mlevel is less than 10
-            elif mDept in ['A/C', 'H/R', 'DSC', 'ASS', 'SAL', 'COL', 'CRM']:
+            elif mDept in ['A/C', 'H/R', 'DSC', 'ASS', 'SAL', 'COL', 'CRM','H/L', 'MGT', 'DOM', 'DEV', 'TRN', 'Q/A', 'ADM', 'TEL', 'MKT', 'D/O']:
                 return True  # True if mDept is one of the listed departments
             return False
 
@@ -49,3 +49,21 @@ class CheckDeptLevelAPI(APIView):
                 return Response({"result": "false"}, status=status.HTTP_200_OK)
         except Exception as e:
             return Response({"error": f"Invalid input condition: {str(e)}"}, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
