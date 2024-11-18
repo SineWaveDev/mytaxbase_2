@@ -76,7 +76,6 @@ def user_login(request):
         connection.close()
 
 
-# 2. Update Coins API
 @api_view(['POST'])
 def update_coins(request):
     user_id = request.data.get('userId')
@@ -84,6 +83,11 @@ def update_coins(request):
     coins_earned = request.data.get('coinsEarned')
 
     try:
+        if not user_id or not action_type or coins_earned is None:
+            return Response({"status": "error", "message": "All fields (userId, actionType, coinsEarned) are required."}, status=400)
+
+        coins_earned = int(coins_earned)
+
         # Fetch user from the external SQL database
         connection = get_db_connection()
         cursor = connection.cursor()
@@ -91,18 +95,22 @@ def update_coins(request):
         user_data = cursor.fetchone()
 
         if user_data is None:
-            return Response({"status": "error", "message": "User not found"}, status=404)
+            # Insert new user if not found
+            cursor.execute("INSERT INTO UserAccounts (user_id, coin_balance) VALUES (%s, %s)", (user_id, coins_earned))
+            new_balance = coins_earned
+        else:
+            current_balance = user_data[0]
+            new_balance = current_balance + coins_earned
+            # Update existing user's coin balance
+            cursor.execute("UPDATE UserAccounts SET coin_balance = %s WHERE user_id = %s", (new_balance, user_id))
 
-        current_balance = user_data[0]
-        new_balance = current_balance + coins_earned
-
-        # Update the user's coin balance in the database
-        cursor.execute("UPDATE UserAccounts SET coin_balance = %s WHERE user_id = %s", (new_balance, user_id))
         connection.commit()
 
         # Log the transaction
-        cursor.execute("INSERT INTO UserRewardTransactions (user_id, action_type, coins_awarded, timestamp) VALUES (%s, %s, %s, %s)",
-                       (user_id, action_type, coins_earned, timezone.now()))
+        cursor.execute(
+            "INSERT INTO UserRewardTransactions (user_id, action_type, coins_awarded, timestamp) VALUES (%s, %s, %s, %s)",
+            (user_id, action_type, coins_earned, timezone.now())
+        )
         connection.commit()
 
         return Response({
@@ -112,12 +120,15 @@ def update_coins(request):
             "coins_earned": coins_earned,
         })
 
-    except Exception as e:
+    except (pymssql.Error, ValueError, TypeError) as e:
         return Response({"status": "error", "message": str(e)}, status=500)
 
     finally:
-        cursor.close()
-        connection.close()
+        if cursor:
+            cursor.close()
+        if connection:
+            connection.close()
+
 
 
 # 3. Get User Balance
@@ -177,3 +188,11 @@ def log_transaction(request):
     finally:
         cursor.close()
         connection.close()
+
+
+
+
+#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
