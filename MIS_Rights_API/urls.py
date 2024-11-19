@@ -1,6 +1,6 @@
 from django.urls import path
-from .views import CheckDeptLevelAPI
+from .views import ConditionEvaluatorView
 
 urlpatterns = [
-    path('check/', CheckDeptLevelAPI.as_view(), name='check-dept-level'),
+    path('check/', ConditionEvaluatorView.as_view(), name='check-dept-level'),
 ]
