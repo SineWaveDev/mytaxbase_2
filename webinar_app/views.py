@@ -1030,7 +1030,7 @@ class webinar_2(APIView):
             return Response({"error": "C and W values are required."}, status=status.HTTP_400_BAD_REQUEST)
 
         # Construct the feedback link using C and W values
-        feedback_link = f'http://www.sinewave.co.in/ExistingUser/Webinar-feedback.aspx?C={c_value}&W={w_value}'
+        feedback_link = f'https://crm.sinewave.co.in/Existinguser/Webinar-feedback.aspx?C={c_value}&W={w_value}'
 
         # Construct the new email body with HTML content
         body = f"""
