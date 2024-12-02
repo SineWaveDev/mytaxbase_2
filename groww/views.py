@@ -9,6 +9,8 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.options import Options
 import uuid
 import time
+import logging
+import os
 
 # A simple in-memory store for demonstration purposes (not suitable for production)
 driver_store = {}
@@ -31,7 +33,7 @@ class StartGrowwLogin(APIView):
         chrome_options.add_argument("--remote-debugging-port=9222")
         
         # Configure for automatic downloads in headless mode
-        download_dir = "path_to_your_download_directory"  # Change this to your desired directory
+        download_dir = "/home/ubuntu/Downloads"  # Change this to your desired directory
         chrome_prefs = {
             "download.default_directory": download_dir,
             "download.prompt_for_download": False,
@@ -40,11 +42,22 @@ class StartGrowwLogin(APIView):
         }
         chrome_options.add_experimental_option("prefs", chrome_prefs)
 
+        logging.basicConfig(level=logging.DEBUG)
+
+        # Use Xvfb (X Virtual FrameBuffer) for virtual display
+        os.environ['DISPLAY'] = ':99'
+
+        # Run Xvfb in the background (if not running)
+        os.system("Xvfb :99 -screen 0 1280x1024x24 &")
+
         # Full path to the chromedriver binary
-        service = Service('/home/ubuntu/Taxenv/mytaxbase_2/chromedriver')
+        service = Service('/usr/local/bin/chromedriver')
         options = webdriver.ChromeOptions()
-        driver = webdriver.Chrome(service=service, options=options)
-                
+        options.add_argument("--headless")  # Run Chrome in headless mode
+
+        # Adjust path to chromedriver as required
+        driver = webdriver.Chrome(service=service, options=chrome_options)
+        
         try:
             # Login process
             driver.get("https://groww.in/login")
@@ -71,6 +84,9 @@ class StartGrowwLogin(APIView):
         except Exception as e:
             driver.quit()
             return JsonResponse({"error": str(e)}, status=500)
+
+
+
 
 class ProvideOTP(APIView):
     def post(self, request):
