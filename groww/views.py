@@ -9,9 +9,6 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.options import Options
 import uuid
 import time
-import logging
-import os
-
 
 # A simple in-memory store for demonstration purposes (not suitable for production)
 driver_store = {}
@@ -24,9 +21,6 @@ class StartGrowwLogin(APIView):
         if not email or not password:
             return JsonResponse({"error": "Email and password are required."}, status=400)
         
-        # Get the current directory of the script
-        current_directory = os.path.dirname(os.path.abspath(__file__))
-
         # Set up Chrome options for headless mode
         chrome_options = Options()
         chrome_options.add_argument("--headless")  # Run Chrome in headless mode
@@ -34,9 +28,10 @@ class StartGrowwLogin(APIView):
         chrome_options.add_argument("--window-size=1920,1080")
         chrome_options.add_argument("--no-sandbox")
         chrome_options.add_argument("--disable-dev-shm-usage")
-
+        chrome_options.add_argument("--remote-debugging-port=9222")
+        
         # Configure for automatic downloads in headless mode
-        download_dir = "/path_to_your_download_directory"  # Change this to your desired directory
+        download_dir = "path_to_your_download_directory"  # Change this to your desired directory
         chrome_prefs = {
             "download.default_directory": download_dir,
             "download.prompt_for_download": False,
@@ -45,12 +40,11 @@ class StartGrowwLogin(APIView):
         }
         chrome_options.add_experimental_option("prefs", chrome_prefs)
 
-        logging.basicConfig(level=logging.DEBUG)
-
-        # Use ChromeDriver from the current directory
-        service = Service(executable_path=os.path.join(current_directory, 'chromedriver'))  # No need for the full path
+        # Set up WebDriver (modify the path to ChromeDriver as needed)
+        service = Service(executable_path='/home/ubuntu/Taxenv/mytaxbase_2/groww/chromedriver')
         driver = webdriver.Chrome(service=service, options=chrome_options)
-
+        driver.maximize_window()
+        
         try:
             # Login process
             driver.get("https://groww.in/login")
@@ -77,9 +71,6 @@ class StartGrowwLogin(APIView):
         except Exception as e:
             driver.quit()
             return JsonResponse({"error": str(e)}, status=500)
-
-
-
 
 class ProvideOTP(APIView):
     def post(self, request):
