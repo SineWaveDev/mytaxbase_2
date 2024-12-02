@@ -1018,6 +1018,7 @@ class webinar_2(APIView):
     def get(self, request, *args, **kwargs):
         # Get parameters from URL query params instead of JSON body
         customer_name = request.query_params.get('customer_name')
+        print("customer_name:", customer_name)
         email = request.query_params.get('email')
         webinar_subject = request.query_params.get('webinar_subject', 'Our Webinar')  # Default value if not provided
         c_value = request.query_params.get('c')  # Retrieve C value

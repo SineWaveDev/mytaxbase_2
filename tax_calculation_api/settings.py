@@ -75,8 +75,10 @@ INSTALLED_APPS = [
     'MIS_Rights_API',
     'request_type',
     'corsheaders',
-    'Coin_Rewards_System',
-    
+    'angel_one',
+    'groww',
+    'icici_direct',
+    'Zerodha_Kite',
 
 ]
 

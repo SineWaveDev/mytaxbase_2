@@ -63,7 +63,10 @@ urlpatterns = [
     path('api/', include('TDS_Validate_Challan_API.urls')),
     path('api/', include('MIS_Rights_API.urls')),
     path('api/', include('Customer_Membership.urls')),
-    path('api/', include('Coin_Rewards_System.urls')),
+    path('api/', include('angel_one.urls')),
+    path('api/', include('groww.urls')),
+    path('api/', include('icici_direct.urls')),
+    path('api/', include('Zerodha_Kite.urls')),
     
     
 ]
