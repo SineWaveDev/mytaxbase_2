@@ -9,8 +9,6 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.options import Options
 import uuid
 import time
-import os
-
 
 # A simple in-memory store for demonstration purposes (not suitable for production)
 driver_store = {}
@@ -42,14 +40,10 @@ class StartGrowwLogin(APIView):
         }
         chrome_options.add_experimental_option("prefs", chrome_prefs)
 
-        # Get the path to the ChromeDriver dynamically from the script's directory
-        current_dir = os.path.dirname(os.path.abspath(__file__))
-        chromedriver_path = os.path.join(current_dir, "chromedriver.exe")
-
-        # Use the dynamically constructed path for ChromeDriver
-        service = Service(chromedriver_path)
-        driver = webdriver.Chrome(service=service, options=chrome_options)
-        driver.maximize_window()
+        # Full path to the chromedriver binary
+        service = Service('/home/ubuntu/Taxenv/mytaxbase_2/chromedriver')
+        options = webdriver.ChromeOptions()
+        driver = webdriver.Chrome(service=service, options=options)
                 
         try:
             # Login process
