@@ -12,6 +12,7 @@ import time
 import logging
 import os
 
+
 # A simple in-memory store for demonstration purposes (not suitable for production)
 driver_store = {}
 
@@ -23,6 +24,9 @@ class StartGrowwLogin(APIView):
         if not email or not password:
             return JsonResponse({"error": "Email and password are required."}, status=400)
         
+        # Get the current directory of the script
+        current_directory = os.path.dirname(os.path.abspath(__file__))
+
         # Set up Chrome options for headless mode
         chrome_options = Options()
         chrome_options.add_argument("--headless")  # Run Chrome in headless mode
@@ -30,10 +34,9 @@ class StartGrowwLogin(APIView):
         chrome_options.add_argument("--window-size=1920,1080")
         chrome_options.add_argument("--no-sandbox")
         chrome_options.add_argument("--disable-dev-shm-usage")
-        chrome_options.add_argument("--remote-debugging-port=9222")
-        
+
         # Configure for automatic downloads in headless mode
-        download_dir = "/home/ubuntu/Downloads"  # Change this to your desired directory
+        download_dir = "/path_to_your_download_directory"  # Change this to your desired directory
         chrome_prefs = {
             "download.default_directory": download_dir,
             "download.prompt_for_download": False,
@@ -44,20 +47,10 @@ class StartGrowwLogin(APIView):
 
         logging.basicConfig(level=logging.DEBUG)
 
-        # Use Xvfb (X Virtual FrameBuffer) for virtual display
-        os.environ['DISPLAY'] = ':99'
-
-        # Run Xvfb in the background (if not running)
-        os.system("Xvfb :99 -screen 0 1280x1024x24 &")
-
-        # Full path to the chromedriver binary
-        service = Service('/usr/local/bin/chromedriver')
-        options = webdriver.ChromeOptions()
-        options.add_argument("--headless")  # Run Chrome in headless mode
-
-        # Adjust path to chromedriver as required
+        # Use ChromeDriver from the current directory
+        service = Service(executable_path=os.path.join(current_directory, 'chromedriver'))  # No need for the full path
         driver = webdriver.Chrome(service=service, options=chrome_options)
-        
+
         try:
             # Login process
             driver.get("https://groww.in/login")
