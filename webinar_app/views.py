@@ -1114,3 +1114,120 @@ class Helpline_Feedback(APIView):
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+
+
+
+class Helpline_Feedback_New(APIView):
+    def get(self, request, *args, **kwargs):
+        # Get customer name, email, and feedback link from query parameters
+        email = request.query_params.get('email')
+        feedback_link = request.query_params.get('feedback_link')
+
+        if not email or not feedback_link:
+            return Response({"error": "email, and feedback link are required."}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Construct the HTML email body with user-defined feedback link
+        body = f"""<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feedback Email</title>
+    <style>
+        body {{
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+        }}
+        .email-container {{
+            max-width: 600px;
+            margin: 20px auto;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }}
+        .email-header {{
+            background-color: #007bff;
+            color: #ffffff;
+            padding: 20px;
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+        }}
+        .email-body {{
+            padding: 20px;
+            line-height: 1.6;
+        }}
+        .email-footer {{
+            background-color: #f1f1f1;
+            text-align: center;
+            padding: 15px;
+            font-size: 14px;
+            color: #666;
+        }}
+        .feedback-button {{
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 16px;
+        }}
+        .feedback-button:hover {{
+            background-color: #0056b3;
+        }}
+        @media screen and (max-width: 600px) {{
+            .email-container {{
+                width: 90%;
+            }}
+            .email-header {{
+                font-size: 20px;
+            }}
+            .feedback-button {{
+                font-size: 14px;
+                padding: 8px 16px;
+            }}
+        }}
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <div class="email-header">
+            Dear Customer,
+        </div>
+        <div class="email-body">
+            <p>Thank you for contacting us. We hope your query has been resolved successfully and to your utmost satisfaction.</p>
+            <p>We would appreciate your valuable feedback to help us serve you better. Please click the link below to provide your feedback:</p>
+            <a href="{feedback_link}" class="feedback-button">Give Feedback</a>
+            <p>Thanks,<br>The Sinewave Team</p>
+        </div>
+        <div class="email-footer">
+            &copy; 2024 Sinewave Team. All Rights Reserved.
+        </div>
+    </div>
+</body>
+</html>
+"""
+
+        # Email configuration
+        sender_email = "crm@sinewave.co.in"
+        receiver_email = email
+        subject = "We Value Your Feedback"
+        message = f"Subject: {subject}\nContent-Type: text/html\n\n{body}"
+
+        # Send the email
+        try:
+            with smtplib.SMTP('smtp.gmail.com', 587) as server:
+                server.starttls()
+                server.login(sender_email, 'fzjv eaaj kdcv svqr')  # Use a valid app password
+                server.sendmail(sender_email, receiver_email, message)
+                return Response({"message": "Email sent successfully"}, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+

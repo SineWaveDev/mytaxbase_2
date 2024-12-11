@@ -1,5 +1,5 @@
 from django.urls import path
-from webinar_app.views import SendEmailAPI, SendEmailAPIHTML, SendEmailTeamControl, SendEmailTaxbaseLicenseVerification, ForgotPassword, FetchDataAPIView, OfficePhoneRequestEmail, SendEmailAPIHTML2, CSCRegisterEmail, PaymentReminderEmail, Paymentmailtosanjay, SendEmailTeamControlCredentialsAPI, SendEmailAPIHTML3 , SendLicenseEmailAPI, webinar_2, Helpline_Feedback
+from webinar_app.views import SendEmailAPI, SendEmailAPIHTML, SendEmailTeamControl, SendEmailTaxbaseLicenseVerification, ForgotPassword, FetchDataAPIView, OfficePhoneRequestEmail, SendEmailAPIHTML2, CSCRegisterEmail, PaymentReminderEmail, Paymentmailtosanjay, SendEmailTeamControlCredentialsAPI, SendEmailAPIHTML3 , SendLicenseEmailAPI, webinar_2, Helpline_Feedback, Helpline_Feedback_New
 
 
 urlpatterns = [
@@ -19,4 +19,5 @@ urlpatterns = [
     path('SendLicenseEmailAPI/', SendLicenseEmailAPI.as_view(), name='SendLicenseEmailAPI'),
     path('webinar_2/', webinar_2.as_view(), name='webinar_2'),
     path('Helpline_Feedback/', Helpline_Feedback.as_view(), name='Helpline_Feedback'),
+    path('Helpline_Feedback_New/', Helpline_Feedback_New.as_view(), name='Helpline_Feedback_New'),
 ]

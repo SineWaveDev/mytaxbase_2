@@ -41,7 +41,8 @@ class StartGrowwLogin(APIView):
         chrome_options.add_experimental_option("prefs", chrome_prefs)
 
         # Set up WebDriver (modify the path to ChromeDriver as needed)
-        service = Service(executable_path='/home/ubuntu/Taxenv/mytaxbase_2/groww/chromedriver')
+        service = Service(r"C:\Users\Sinewave#2022\Downloads\chromedriver-win64\chromedriver-win64\chromedriver.exe")
+        # service = Service(executable_path='/home/ubuntu/Taxenv/mytaxbase_2/groww/chromedriver')
         driver = webdriver.Chrome(service=service, options=chrome_options)
         driver.maximize_window()
         
