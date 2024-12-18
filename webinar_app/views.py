@@ -1215,7 +1215,7 @@ class Helpline_Feedback_New(APIView):
 """
 
         # Email configuration
-        sender_email = "crm@sinewave.co.in"
+        sender_email = "accounts@sinewave.co.in"
         receiver_email = email
         subject = "We Value Your Feedback"
         message = f"Subject: {subject}\nContent-Type: text/html\n\n{body}"
@@ -1224,7 +1224,7 @@ class Helpline_Feedback_New(APIView):
         try:
             with smtplib.SMTP('smtp.gmail.com', 587) as server:
                 server.starttls()
-                server.login(sender_email, 'fzjv eaaj kdcv svqr')  # Use a valid app password
+                server.login('accounts@sinewave.co.in', 'nuag qypq xuwi rqev')  
                 server.sendmail(sender_email, receiver_email, message)
                 return Response({"message": "Email sent successfully"}, status=status.HTTP_200_OK)
         except Exception as e:

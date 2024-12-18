@@ -79,6 +79,7 @@ INSTALLED_APPS = [
     'groww',
     'icici_direct',
     'Zerodha_Kite',
+    'Taxbase_Login_API',
 
 ]
 
