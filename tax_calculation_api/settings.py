@@ -80,6 +80,7 @@ INSTALLED_APPS = [
     'icici_direct',
     'Zerodha_Kite',
     'Taxbase_Login_API',
+    'user_status_Teams_calling_system',
 
 ]
 
