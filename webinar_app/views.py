@@ -1231,3 +1231,121 @@ class Helpline_Feedback_New(APIView):
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
+
+
+
+
+class Helpline_Feedback_Thankyou_Message(APIView):
+    def get(self, request, *args, **kwargs):
+        # Get customer name and email from query parameters only
+        customer_name = request.query_params.get('customer_name')
+        email = request.query_params.get('email')
+
+        if not customer_name or not email:
+            return Response({"error": "Customer name and email are required."}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Replace placeholders in the HTML template with actual values
+        html_template = f"""
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <style>
+                body {{
+                    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                    margin: 0;
+                    padding: 0;
+                    background-color: #f4f4f9;
+                }}
+                .email-container {{
+                    max-width: 600px;
+                    margin: 30px auto;
+                    background-color: #ffffff;
+                    border-radius: 10px;
+                    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                    overflow: hidden;
+                }}
+                .email-header {{
+                    background: linear-gradient(135deg, #4caf50, #008cba);
+                    color: #ffffff;
+                    text-align: center;
+                    padding: 20px;
+                }}
+                .email-header h1 {{
+                    font-size: 24px;
+                    margin: 0;
+                }}
+                .email-body {{
+                    padding: 20px;
+                    font-size: 16px;
+                    line-height: 1.6;
+                    color: #333333;
+                }}
+                .email-body p {{
+                    margin: 15px 0;
+                }}
+                .highlight {{
+                    color: #008cba;
+                    font-weight: bold;
+                }}
+                .email-footer {{
+                    background-color: #f0f8ff;
+                    text-align: center;
+                    padding: 15px;
+                    font-size: 14px;
+                    color: #555555;
+                    border-top: 1px solid #e0e0e0;
+                }}
+                .email-footer strong {{
+                    color: #4caf50;
+                }}
+            </style>
+        </head>
+        <body>
+            <div class="email-container">
+                <!-- Header Section -->
+                <div class="email-header">
+                    <h1>Thank You for Your Feedback!</h1>
+                </div>
+                <!-- Body Section -->
+                <div class="email-body">
+                    <p>Dear <span class="highlight">{customer_name}</span>,</p>
+                    <p>We sincerely appreciate you taking the time to share your feedback with us. Your input is <span class="highlight">Valuable</span> in helping us improve our products and services to serve you better.</p>
+                    <p>At <span class="highlight">Sinewave</span>, we are committed to delivering the best experience to our customers, and your suggestions and comments play a significant role in achieving that goal.</p>
+                    <p>If you have any additional thoughts or need further assistance, please don’t hesitate to reach out to us. We're always here to help.</p>
+                </div>
+                <!-- Footer Section -->
+                <div class="email-footer">
+                    <p>Thank you once again for your time and support.</p>
+                    <p>
+                        <strong>Warm regards,</strong><br>
+                        <strong>Sinewave Team</strong>
+                    </p>
+                </div>
+            </div>
+        </body>
+        </html>
+        """
+
+        # Email configuration
+        sender_email = "crm@sinewave.co.in"
+        receiver_email = email
+
+        # Send the email
+        try:
+            # Set up the MIME message
+            msg = MIMEMultipart("alternative")
+            msg["Subject"] = "Thank You for Your Feedback"
+            msg["From"] = sender_email
+            msg["To"] = receiver_email
+            msg.attach(MIMEText(html_template, "html"))
+
+            # Send the email
+            with smtplib.SMTP("smtp.gmail.com", 587) as server:
+                server.starttls()
+                server.login(sender_email, "fzjv eaaj kdcv svqr")  # Use a valid app password
+                server.sendmail(sender_email, receiver_email, msg.as_string())
+                return Response({"message": "Email sent successfully"}, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
