@@ -629,10 +629,6 @@ class PaymentReminderEmail(APIView):
                f"{url}\n\n" \
                f"Sinewave Team."
 
-
-
-
-
         # Email configuration
         sender_email = "crm@sinewave.co.in"
         receiver_email = email
@@ -1224,7 +1220,7 @@ class Helpline_Feedback_New(APIView):
         try:
             with smtplib.SMTP('smtp.gmail.com', 587) as server:
                 server.starttls()
-                server.login('accounts@sinewave.co.in', 'nuag qypq xuwi rqev')  
+                server.login('crm@sinewave.co.in', 'fzjv eaaj kdcv svqr')  
                 server.sendmail(sender_email, receiver_email, message)
                 return Response({"message": "Email sent successfully"}, status=status.HTTP_200_OK)
         except Exception as e:
