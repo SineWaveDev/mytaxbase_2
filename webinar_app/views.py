@@ -24,7 +24,7 @@ class SendEmailAPI(APIView):
         cc_email = "rupesh.k@sinewave.in"
 
         # Email configuration
-        sender_email = "crm@sinewave.co.in"
+        sender_email = "no-reply@sinewave.in"
         receiver_email = email
         subject = f"FW: Webinar Registration Successful - {webinar_subject}"
 
@@ -44,12 +44,12 @@ class SendEmailAPI(APIView):
         body += closing_message
 
         # Gmail SMTP server and port
-        smtp_server = "smtp.gmail.com"
+        smtp_server = "smtp.office365.com"
         smtp_port = 587
 
         # Your Gmail account credentials
-        username = "crm@sinewave.co.in"
-        password = "fzjv eaaj kdcv svqr" 
+        username = "no-reply@sinewave.in"
+        password = "mcwxnfkqhthkbnyw" 
 
         # Create the email message
         message = MIMEMultipart()
@@ -207,7 +207,7 @@ class SendEmailAPIHTML(APIView):
     
 
         # Email configuration
-        sender_email = "crm@sinewave.co.in"
+        sender_email = "no-reply@sinewave.in"
         receiver_email = email
         subject = "For Change Password On Sinewave Portel"
         # Create a multipart message and set headers
@@ -220,9 +220,9 @@ class SendEmailAPIHTML(APIView):
         message.attach(MIMEText(email_content, 'html'))
 
         # Send the email
-        with smtplib.SMTP('smtp.gmail.com', 587) as server:
+        with smtplib.SMTP('smtp.office365.com', 587) as server:
             server.starttls()
-            server.login('crm@sinewave.co.in', 'fzjv eaaj kdcv svqr')
+            server.login('no-reply@sinewave.in', 'mcwxnfkqhthkbnyw')
             text = message.as_string()
             server.sendmail(sender_email, receiver_email, text)
             return Response({"message": "Email sent successfully"}, status=status.HTTP_200_OK)
@@ -253,7 +253,7 @@ class SendEmailTeamControl(APIView):
                f"http://www.sinewave.co.in"
 
         # Email configuration
-        sender_email = "crm@sinewave.co.in"
+        sender_email = "no-reply@sinewave.in"
         receiver_email = email
         subject = "Credentials for Sinewave TeamControl"
         # Create a multipart message and set headers
@@ -266,9 +266,9 @@ class SendEmailTeamControl(APIView):
         message.attach(MIMEText(body, 'plain'))
 
         # Send the email
-        with smtplib.SMTP('smtp.gmail.com', 587) as server:
+        with smtplib.SMTP('smtp.office365.com', 587) as server:
             server.starttls()
-            server.login('crm@sinewave.co.in', 'fzjv eaaj kdcv svqr')
+            server.login('no-reply@sinewave.in', 'mcwxnfkqhthkbnyw')
             text = message.as_string()
             server.sendmail(sender_email, receiver_email, text)
             return Response({"message": "Email sent successfully"}, status=status.HTTP_200_OK)
@@ -296,7 +296,7 @@ class SendEmailTaxbaseLicenseVerification(APIView):
                f"Sinewave Computer Services Pvt. Ltd."
 
         # Email configuration
-        sender_email = "crm@sinewave.co.in"
+        sender_email = "no-reply@sinewave.in"
         receiver_email = email
         subject = "Taxbase License Verification"
         # Create a multipart message and set headers
@@ -309,9 +309,9 @@ class SendEmailTaxbaseLicenseVerification(APIView):
         message.attach(MIMEText(body, 'plain'))
 
         # Send the email
-        with smtplib.SMTP('smtp.gmail.com', 587) as server:
+        with smtplib.SMTP('smtp.office365.com', 587) as server:
             server.starttls()
-            server.login('crm@sinewave.co.in', 'fzjv eaaj kdcv svqr')
+            server.login('no-reply@sinewave.in', 'mcwxnfkqhthkbnyw')
             text = message.as_string()
             server.sendmail(sender_email, receiver_email, text)
             return Response({"message": "Email sent successfully"}, status=status.HTTP_200_OK)
@@ -334,7 +334,7 @@ class ForgotPassword(APIView):
     
 
         # Email configuration
-        sender_email = "crm@sinewave.co.in"
+        sender_email = "no-reply@sinewave.in"
         receiver_email = email
         subject = "Forgot Password"
         # Create a multipart message and set headers
@@ -347,9 +347,9 @@ class ForgotPassword(APIView):
         message.attach(MIMEText(email_content, 'html'))
 
         # Send the email
-        with smtplib.SMTP('smtp.gmail.com', 587) as server:
+        with smtplib.SMTP('smtp.office365.com', 587) as server:
             server.starttls()
-            server.login('crm@sinewave.co.in', 'fzjv eaaj kdcv svqr')
+            server.login('no-reply@sinewave.in', 'mcwxnfkqhthkbnyw')
             text = message.as_string()
             server.sendmail(sender_email, receiver_email, text)
             return Response({"message": "Email sent successfully"}, status=status.HTTP_200_OK)
@@ -409,7 +409,7 @@ class OfficePhoneRequestEmail(APIView):
                f"Sinewave Team."
 
         # Email configuration
-        sender_email = "crm@sinewave.co.in"
+        sender_email = "no-reply@sinewave.in"
         receiver_email = email
         subject = "Taxbase License Verification"
 
@@ -424,9 +424,9 @@ class OfficePhoneRequestEmail(APIView):
 
         # Send the email
         try:
-            with smtplib.SMTP('smtp.gmail.com', 587) as server:
+            with smtplib.SMTP('smtp.office365.com', 587) as server:
                 server.starttls()
-                server.login('crm@sinewave.co.in', 'fzjv eaaj kdcv svqr')
+                server.login('no-reply@sinewave.in', 'mcwxnfkqhthkbnyw')
                 text = message.as_string()
                 server.sendmail(sender_email, receiver_email, text)
                 return Response({"message": "Email sent successfully"}, status=status.HTTP_200_OK)
@@ -437,14 +437,6 @@ class OfficePhoneRequestEmail(APIView):
 
 
 
-
-
-from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
-import smtplib
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework import status
 
 class SendEmailAPIHTML2(APIView):
     def get(self, request, *args, **kwargs):
@@ -538,7 +530,7 @@ class SendEmailAPIHTML2(APIView):
         """
     
         # Email configuration
-        sender_email = "crm@sinewave.co.in"
+        sender_email = "no-reply@sinewave.in"
         receiver_email = email
         subject = "For Change Password On Sinewave Portel"
         
@@ -553,9 +545,9 @@ class SendEmailAPIHTML2(APIView):
 
         # Send the email
         try:
-            with smtplib.SMTP('smtp.gmail.com', 587) as server:
+            with smtplib.SMTP('smtp.office365.com', 587) as server:
                 server.starttls()
-                server.login('crm@sinewave.co.in', 'fzjv eaaj kdcv svqr')
+                server.login('no-reply@sinewave.in', 'mcwxnfkqhthkbnyw')
                 text = message.as_string()
                 server.sendmail(sender_email, receiver_email, text)
                 return Response({"message": "Email sent successfully"}, status=status.HTTP_200_OK)
@@ -588,14 +580,14 @@ class CSCRegisterEmail(APIView):
                f"Sinewave Team."
 
         # Email configuration
-        sender_email = "crm@sinewave.co.in"
+        sender_email = "no-reply@sinewave.in"
         receiver_email = "rutuja.s@sinewave.in"
 
         # Send the email
         try:
-            with smtplib.SMTP('smtp.gmail.com', 587) as server:
+            with smtplib.SMTP('smtp.office365.com', 587) as server:
                 server.starttls()
-                server.login('crm@sinewave.co.in', 'fzjv eaaj kdcv svqr')
+                server.login('no-reply@sinewave.in', 'mcwxnfkqhthkbnyw')
                 server.sendmail(sender_email, receiver_email, body)
                 return Response({"message": "Email sent successfully"}, status=status.HTTP_200_OK)
         except Exception as e:
@@ -604,11 +596,6 @@ class CSCRegisterEmail(APIView):
 
 
 
-
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework import status
-import smtplib
 
 class PaymentReminderEmail(APIView):
     def post(self, request, *args, **kwargs):
@@ -630,14 +617,14 @@ class PaymentReminderEmail(APIView):
                f"Sinewave Team."
 
         # Email configuration
-        sender_email = "crm@sinewave.co.in"
+        sender_email = "no-reply@sinewave.in"
         receiver_email = email
 
         # Send the email
         try:
-            with smtplib.SMTP('smtp.gmail.com', 587) as server:
+            with smtplib.SMTP('smtp.office365.com', 587) as server:
                 server.starttls()
-                server.login('crm@sinewave.co.in', 'fzjv eaaj kdcv svqr')
+                server.login('no-reply@sinewave.in', 'mcwxnfkqhthkbnyw')
                 server.sendmail(sender_email, receiver_email, body)
                 return Response({"message": "Email sent successfully"}, status=status.HTTP_200_OK)
         except Exception as e:
@@ -666,14 +653,14 @@ class Paymentmailtosanjay(APIView):
                f"The Email Id/Mobile number provided by you for {customer_name}, is incorrect. Kindly correct the same and retry."
 
         # Email configuration
-        sender_email = "crm@sinewave.co.in"
+        sender_email = "no-reply@sinewave.in"
         receiver_email = email  # Replace with actual receiver email
 
         # Send the email
         try:
-            with smtplib.SMTP('smtp.gmail.com', 587) as server:
+            with smtplib.SMTP('smtp.office365.com', 587) as server:
                 server.starttls()
-                server.login(sender_email, 'fzjv eaaj kdcv svqr')
+                server.login('no-reply@sinewave.in', 'mcwxnfkqhthkbnyw')
                 server.sendmail(sender_email, receiver_email, body)
                 return Response({"message": "Email sent successfully"}, status=status.HTTP_200_OK)
         except Exception as e:
@@ -714,12 +701,12 @@ class SendEmailTeamControlCredentialsAPI(APIView):
         )
 
         # Gmail SMTP server and port
-        smtp_server = "smtp.gmail.com"
+        smtp_server = "smtp.office365.com"
         smtp_port = 587
 
         # Your Gmail account credentials
-        username = "crm@sinewave.co.in"
-        password = "fzjv eaaj kdcv svqr" 
+        username = "no-reply@sinewave.in"
+        password = "mcwxnfkqhthkbnyw" 
 
         # Create the email message
         message = MIMEMultipart()
@@ -965,7 +952,7 @@ class SendLicenseEmailAPI(APIView):
         email = request.query_params.get('email')
 
         # Email configuration
-        sender_email = "crm@sinewave.co.in"
+        sender_email = "no-reply@sinewave.in"
         receiver_email = email
         subject = "License Information for In-house Testing"
 
@@ -983,12 +970,12 @@ class SendLicenseEmailAPI(APIView):
         )
 
         # Gmail SMTP server and port
-        smtp_server = "smtp.gmail.com"
+        smtp_server = "smtp.office365.com"
         smtp_port = 587
 
         # Your Gmail account credentials
-        username = "crm@sinewave.co.in"
-        email_password = "fzjv eaaj kdcv svqr"  # Ensure to secure your password
+        username = "no-reply@sinewave.in"
+        email_password = "mcwxnfkqhthkbnyw"  # Ensure to secure your password
 
         # Create the email message
         message = MIMEMultipart()
@@ -1046,7 +1033,7 @@ class webinar_2(APIView):
         """
 
         # Email configuration
-        sender_email = "crm@sinewave.co.in"
+        sender_email = "no-reply@sinewave.in"
         receiver_email = email
 
         # Send the email with HTML content
@@ -1062,7 +1049,7 @@ class webinar_2(APIView):
             # Attach the HTML body to the email
             msg.attach(MIMEText(body, "html"))
 
-            with smtplib.SMTP('smtp.gmail.com', 587) as server:
+            with smtplib.SMTP('smtp.office365.com', 587) as server:
                 server.starttls()
                 server.login(sender_email, 'fzjv eaaj kdcv svqr')  # Be sure to use a valid app password
                 server.sendmail(sender_email, receiver_email, msg.as_string())
@@ -1097,7 +1084,7 @@ class Helpline_Feedback(APIView):
                 """
 
         # Email configuration
-        sender_email = "crm@sinewave.co.in"
+        sender_email = "no-reply@sinewave.in"
         receiver_email = email
 
         # Send the email
@@ -1211,7 +1198,7 @@ class Helpline_Feedback_New(APIView):
 """
 
         # Email configuration
-        sender_email = "accounts@sinewave.co.in"
+        sender_email = "no-reply@sinewave.in"
         receiver_email = email
         subject = "We Value Your Feedback"
         message = f"Subject: {subject}\nContent-Type: text/html\n\n{body}"
@@ -1220,7 +1207,7 @@ class Helpline_Feedback_New(APIView):
         try:
             with smtplib.SMTP('smtp.gmail.com', 587) as server:
                 server.starttls()
-                server.login('crm@sinewave.co.in', 'fzjv eaaj kdcv svqr')  
+                server.login(sender_email, 'fzjv eaaj kdcv svqr')  # Be sure to use a valid app password
                 server.sendmail(sender_email, receiver_email, message)
                 return Response({"message": "Email sent successfully"}, status=status.HTTP_200_OK)
         except Exception as e:
@@ -1325,7 +1312,7 @@ class Helpline_Feedback_Thankyou_Message(APIView):
         """
 
         # Email configuration
-        sender_email = "crm@sinewave.co.in"
+        sender_email = "no-reply@sinewave.in"
         receiver_email = email
 
         # Send the email
@@ -1340,7 +1327,7 @@ class Helpline_Feedback_Thankyou_Message(APIView):
             # Send the email
             with smtplib.SMTP("smtp.gmail.com", 587) as server:
                 server.starttls()
-                server.login(sender_email, "fzjv eaaj kdcv svqr")  # Use a valid app password
+                server.login(sender_email, 'fzjv eaaj kdcv svqr')
                 server.sendmail(sender_email, receiver_email, msg.as_string())
                 return Response({"message": "Email sent successfully"}, status=status.HTTP_200_OK)
         except Exception as e:
