@@ -124,37 +124,27 @@ class ProvideOTPAngle(APIView):
             return JsonResponse({"error": f"Failed to process OTP and download reports: {str(e)}"}, status=500)
 
 
-class DownloadFile(APIView):
-    def get(self, request):
-        # Get the list of all files in the download directory
-        files = sorted(
-            [(f, os.path.getmtime(os.path.join(DOWNLOAD_DIR, f))) for f in os.listdir(DOWNLOAD_DIR)],
-            key=lambda x: x[1], reverse=True
-        )
 
-        # Fetch the last two files
-        if len(files) < 2:
-            return JsonResponse({"error": "Less than two files available for download."}, status=400)
+    class DownloadFile(APIView):
+        def get(self, request):
+            # Get the list of all files in the download directory
+            files = sorted(
+                [(f, os.path.getmtime(os.path.join(DOWNLOAD_DIR, f))) for f in os.listdir(DOWNLOAD_DIR)],
+                key=lambda x: x[1], reverse=True
+            )
 
-        latest_files = [os.path.join(DOWNLOAD_DIR, file[0]) for file in files[:2]]
-        responses = []
+            # Fetch the last file
+            if len(files) < 1:
+                return JsonResponse({"error": "No files available for download."}, status=400)
 
-        try:
-            for file_path in latest_files:
-                filename = os.path.basename(file_path)
-
-                # Serve the file as a response
-                response = FileResponse(open(file_path, "rb"), as_attachment=True, filename=filename)
-                responses.append({"filename": filename, "response": response})
-
-                # Delete the file after serving
-                os.remove(file_path)
-
-            return JsonResponse({
-                "status": "Success",
-                "message": "Last two files downloaded successfully.",
-                "files": [resp["filename"] for resp in responses]
-            }, status=200)
-        except Exception as e:
-            return JsonResponse({"error": f"Error during file processing: {str(e)}"}, status=500)
-
+            latest_file = os.path.join(DOWNLOAD_DIR, files[0][0])
+            try:
+                filename = os.path.basename(latest_file)
+                response = FileResponse(open(latest_file, "rb"), as_attachment=True, filename=filename)
+                return JsonResponse({
+                    "status": "Success",
+                    "message": "File downloaded successfully.",
+                    "filename": filename
+                }, status=200)
+            except Exception as e:
+                return JsonResponse({"error": f"Error during file download: {str(e)}"}, status=500)
