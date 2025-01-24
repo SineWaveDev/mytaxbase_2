@@ -1,20 +1,22 @@
-
-
 from rest_framework.views import APIView
-from django.http import JsonResponse
+from django.http import JsonResponse, FileResponse
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.chrome.options import Options
 import uuid
 import os
 
-# In-memory store for session and drivers
+# In-memory store for session and WebDriver instances
 driver_store = {}
+
+# Configure download directory for the headless browser
+DOWNLOAD_DIR = "/tmp"  # Path on the server
+if not os.path.exists(DOWNLOAD_DIR):
+    os.makedirs(DOWNLOAD_DIR)
 
 class StartangleLogin(APIView):
     def post(self, request):
@@ -22,6 +24,7 @@ class StartangleLogin(APIView):
         if not mobile_number:
             return JsonResponse({"error": "Mobile number is required."}, status=400)
 
+        # Configure Chrome options for headless mode
         chrome_options = Options()
         chrome_options.add_argument("--headless")
         chrome_options.add_argument("--disable-gpu")
@@ -29,39 +32,33 @@ class StartangleLogin(APIView):
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("--window-size=1920,1080")
         chrome_options.add_argument("--remote-debugging-port=9222")
-        chrome_prefs = {
-            "download.default_directory": "/tmp",  # Set a writable directory for downloads
+        chrome_options.add_experimental_option("prefs", {
+            "download.default_directory": DOWNLOAD_DIR,
             "download.prompt_for_download": False,
-            "download.directory_upgrade": True,
-            "safebrowsing.enabled": True,
-        }
-        chrome_options.add_experimental_option("prefs", chrome_prefs)
+            "safebrowsing.enabled": True
+        })
 
-
-        # Get the path to the ChromeDriver dynamically from the script's directory
-        service = Service("/usr/local/bin/chromedriver")
-
+        # Set up WebDriver
+        service = Service("/usr/local/bin/chromedriver")  # Ensure the path to ChromeDriver is correct
         driver = webdriver.Chrome(service=service, options=chrome_options)
-        driver.maximize_window()
+
         try:
             driver.get("https://www.angelone.in/login/")
-
-            email_input = WebDriverWait(driver, 10).until(
+            WebDriverWait(driver, 10).until(
                 EC.element_to_be_clickable((By.XPATH, '//*[@id="mobile"]'))
-            )
-            email_input.send_keys(mobile_number)
-            continue_button = WebDriverWait(driver, 10).until(
-                EC.element_to_be_clickable((By.XPATH, '//*[@id="root"]/div/div/div[2]/div/div/div[2]/form/button'))
-            )
-            continue_button.click()
+            ).send_keys(mobile_number)
 
-            # Save session and return response
+            WebDriverWait(driver, 10).until(
+                EC.element_to_be_clickable((By.XPATH, '//*[@id="root"]/div/div/div[2]/div/div/div[2]/form/button'))
+            ).click()
+
+            # Save session and driver
             session_id = str(uuid.uuid4())
             driver_store[session_id] = driver
             return JsonResponse({"message": "OTP required", "session_id": session_id})
         except Exception as e:
             driver.quit()
-            return JsonResponse({"error": str(e)}, status=500)
+            return JsonResponse({"error": f"Failed to initiate login: {str(e)}"}, status=500)
 
 
 class ProvideOTPAngle(APIView):
@@ -80,55 +77,84 @@ class ProvideOTPAngle(APIView):
             return JsonResponse({"error": "Session expired or not found."}, status=400)
 
         try:
-            otp_input = WebDriverWait(driver, 30).until(
+            # Enter OTP
+            WebDriverWait(driver, 30).until(
                 EC.element_to_be_clickable((By.XPATH, '//*[@id="verifyOtp"]'))
-            )
-            otp_input.send_keys(otp)
-            otp_input.send_keys(Keys.RETURN)
+            ).send_keys(otp, Keys.RETURN)
 
-            pin_input = WebDriverWait(driver, 30).until(
+            # Enter PIN
+            WebDriverWait(driver, 30).until(
                 EC.element_to_be_clickable((By.XPATH, '//*[@id="loginpin"]'))
-            )
-            pin_input.send_keys(pin)
-            pin_input.send_keys(Keys.RETURN)
+            ).send_keys(pin, Keys.RETURN)
 
-            got_it_button = WebDriverWait(driver, 10).until(
+            # Handle modals and navigate to reports
+            WebDriverWait(driver, 10).until(
                 EC.element_to_be_clickable((By.XPATH, '//*[@id="modal"]/div/div/div[2]/button'))
-            )
-            got_it_button.click()
+            ).click()
 
-            not_now_button = WebDriverWait(driver, 10).until(
+            WebDriverWait(driver, 10).until(
                 EC.element_to_be_clickable((By.XPATH, '//*[@id="modal"]/div/div[2]/div[2]/button[1]'))
-            )
-            not_now_button.click()
+            ).click()
 
-            profile_click = WebDriverWait(driver, 10).until(
+            WebDriverWait(driver, 10).until(
                 EC.element_to_be_clickable((By.XPATH, '//*[@id="appContainer"]/div[2]/nav/nav/div/div[8]/div[1]/span'))
-            )
-            profile_click.click()
+            ).click()
 
-            reports = WebDriverWait(driver, 10).until(
+            WebDriverWait(driver, 10).until(
                 EC.element_to_be_clickable((By.XPATH, '//*[@id="appContainer"]/div[3]/div[2]/div/div[2]/div[1]/div[2]/div[2]/div/div/div[2]/a[4]/div/div[2]/div/h3'))
-            )
-            reports.click()
+            ).click()
 
+            # Switch to new tab and enter date range
             driver.switch_to.window(driver.window_handles[-1])
-            from_date_input = WebDriverWait(driver, 30).until(
+            WebDriverWait(driver, 30).until(
                 EC.element_to_be_clickable((By.XPATH, '//*[@id="customStartDatePNL"]'))
-            )
-            from_date_input.clear()
-            from_date_input.send_keys(from_date)
+            ).send_keys(from_date)
 
-            to_date_input = WebDriverWait(driver, 30).until(
+            WebDriverWait(driver, 30).until(
                 EC.element_to_be_clickable((By.XPATH, '//*[@id="customEndDatePNL"]'))
-            )
-            to_date_input.clear()
-            to_date_input.send_keys(to_date)
+            ).send_keys(to_date)
 
-            download_button = WebDriverWait(driver, 10).until(
+            # Click download button
+            WebDriverWait(driver, 10).until(
                 EC.element_to_be_clickable((By.XPATH, '//*[@id="download-reports-download-button"]'))
-            )
-            download_button.click()
-            return JsonResponse({"status": "Success"}, status=200)
+            ).click()
+
+            return JsonResponse({"status": "Success", "message": "Report download initiated."}, status=200)
         except Exception as e:
-            return JsonResponse({"error": str(e)}, status=500)
+            return JsonResponse({"error": f"Failed to process OTP and download reports: {str(e)}"}, status=500)
+
+
+class DownloadFile(APIView):
+    def get(self, request):
+        # Get the list of all files in the download directory
+        files = sorted(
+            [(f, os.path.getmtime(os.path.join(DOWNLOAD_DIR, f))) for f in os.listdir(DOWNLOAD_DIR)],
+            key=lambda x: x[1], reverse=True
+        )
+
+        # Fetch the last two files
+        if len(files) < 2:
+            return JsonResponse({"error": "Less than two files available for download."}, status=400)
+
+        latest_files = [os.path.join(DOWNLOAD_DIR, file[0]) for file in files[:2]]
+        responses = []
+
+        try:
+            for file_path in latest_files:
+                filename = os.path.basename(file_path)
+
+                # Serve the file as a response
+                response = FileResponse(open(file_path, "rb"), as_attachment=True, filename=filename)
+                responses.append({"filename": filename, "response": response})
+
+                # Delete the file after serving
+                os.remove(file_path)
+
+            return JsonResponse({
+                "status": "Success",
+                "message": "Last two files downloaded successfully.",
+                "files": [resp["filename"] for resp in responses]
+            }, status=200)
+        except Exception as e:
+            return JsonResponse({"error": f"Error during file processing: {str(e)}"}, status=500)
+
