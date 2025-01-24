@@ -1,5 +1,3 @@
-
-
 from rest_framework.views import APIView
 from django.http import JsonResponse
 from selenium import webdriver
@@ -22,15 +20,14 @@ class StartangleLogin(APIView):
         if not mobile_number:
             return JsonResponse({"error": "Mobile number is required."}, status=400)
 
-         # Set up Chrome options for headless mode
+        # Set up Chrome options
         chrome_options = Options()
-        chrome_options.add_argument("--headless")
-        chrome_options.add_argument("--disable-gpu")
         chrome_options.add_argument("--no-sandbox")
         chrome_options.add_argument("--disable-dev-shm-usage")
+        # Removing headless mode for debugging
+        # chrome_options.add_argument("--headless")
         chrome_options.add_argument("--window-size=1920,1080")
         chrome_options.add_argument("--remote-debugging-port=9222")
-                
 
         chrome_prefs = {
             "download.default_directory": "/tmp",  # Set a writable directory for downloads
@@ -41,7 +38,8 @@ class StartangleLogin(APIView):
         chrome_options.add_experimental_option("prefs", chrome_prefs)
 
         # Get the path to the ChromeDriver dynamically from the script's directory
-        service = Service("/usr/local/bin/chromedriver")
+        driver_path = ChromeDriverManager().install()
+        service = Service(driver_path)
 
         driver = webdriver.Chrome(service=service, options=chrome_options)
         driver.maximize_window()
@@ -63,8 +61,7 @@ class StartangleLogin(APIView):
             return JsonResponse({"message": "OTP required", "session_id": session_id})
         except Exception as e:
             driver.quit()
-            return JsonResponse({"error": str(e)}, status=500)
-
+            return JsonResponse({"error": f"Failed to login: {str(e)}"}, status=500)
 
 class ProvideOTPAngle(APIView):
     def post(self, request):
@@ -131,6 +128,8 @@ class ProvideOTPAngle(APIView):
                 EC.element_to_be_clickable((By.XPATH, '//*[@id="download-reports-download-button"]'))
             )
             download_button.click()
+
             return JsonResponse({"status": "Success"}, status=200)
         except Exception as e:
-            return JsonResponse({"error": str(e)}, status=500)
+            return JsonResponse({"error": f"Failed to provide OTP or generate report: {str(e)}"}, status=500)
+
