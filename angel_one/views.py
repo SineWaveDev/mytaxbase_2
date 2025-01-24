@@ -30,7 +30,7 @@ class StartangleLogin(APIView):
         chrome_options.add_argument("--remote-debugging-port=9222")
 
         chrome_prefs = {
-            "download.default_directory": "/tmp",  # Set a writable directory for downloads
+            "download.default_directory": "/home/ubuntu/Downloads",  # Set a writable directory for downloads
             "download.prompt_for_download": False,
             "download.directory_upgrade": True,
             "safebrowsing.enabled": True,
