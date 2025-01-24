@@ -22,31 +22,25 @@ class StartangleLogin(APIView):
         if not mobile_number:
             return JsonResponse({"error": "Mobile number is required."}, status=400)
 
-         # Set up Chrome options for headless mode
         chrome_options = Options()
-        chrome_options.add_argument("--headless")  # Run Chrome in headless mode
+        chrome_options.add_argument("--headless")
         chrome_options.add_argument("--disable-gpu")
-        chrome_options.add_argument("--window-size=1920,1080")
         chrome_options.add_argument("--no-sandbox")
         chrome_options.add_argument("--disable-dev-shm-usage")
+        chrome_options.add_argument("--window-size=1920,1080")
         chrome_options.add_argument("--remote-debugging-port=9222")
-        
-        # Configure for automatic downloads in headless mode
-        download_dir = "path_to_your_download_directory"  # Change this to your desired directory
         chrome_prefs = {
-            "download.default_directory": download_dir,
+            "download.default_directory": "/tmp",  # Set a writable directory for downloads
             "download.prompt_for_download": False,
             "download.directory_upgrade": True,
-            "safebrowsing.enabled": True
+            "safebrowsing.enabled": True,
         }
         chrome_options.add_experimental_option("prefs", chrome_prefs)
 
-        # Get the path to the ChromeDriver dynamically from the script's directory
-        current_dir = os.path.dirname(os.path.abspath(__file__))
-        chromedriver_path = os.path.join(current_dir, "chromedriver.exe")
 
-        # Use the dynamically constructed path for ChromeDriver
-        service = Service(chromedriver_path)
+        # Get the path to the ChromeDriver dynamically from the script's directory
+        service = Service("/usr/local/bin/chromedriver")
+
         driver = webdriver.Chrome(service=service, options=chrome_options)
         driver.maximize_window()
         try:
