@@ -25,10 +25,10 @@ SECRET_KEY = 'django-insecure-b0k-2l=0$e7pduf5$&)sqfdi*+enq&qm0wo7@3(t$1+*y^_t-=
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['mosversion2.sinewave.co.in','https://mosversion2.sinewave.co.in','http://mosversion2.sinewave.co.in', 'localhost']
+ALLOWED_HOSTS = ['*']
+
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',
-    'mosversion2.sinewave.co.in','https://mosversion2.sinewave.co.in','http://mosversion2.sinewave.co.in'
     # Add other allowed origins if needed
 ]
 
