@@ -1,3 +1,5 @@
+
+
 from rest_framework.views import APIView
 from django.http import JsonResponse
 from selenium import webdriver
@@ -20,27 +22,31 @@ class StartangleLogin(APIView):
         if not mobile_number:
             return JsonResponse({"error": "Mobile number is required."}, status=400)
 
-        # Set up Chrome options
+         # Set up Chrome options for headless mode
         chrome_options = Options()
+        chrome_options.add_argument("--headless")  # Run Chrome in headless mode
+        chrome_options.add_argument("--disable-gpu")
+        chrome_options.add_argument("--window-size=1920,1080")
         chrome_options.add_argument("--no-sandbox")
         chrome_options.add_argument("--disable-dev-shm-usage")
-        # Removing headless mode for debugging
-        # chrome_options.add_argument("--headless")
-        chrome_options.add_argument("--window-size=1920,1080")
         chrome_options.add_argument("--remote-debugging-port=9222")
-
+        
+        # Configure for automatic downloads in headless mode
+        download_dir = "path_to_your_download_directory"  # Change this to your desired directory
         chrome_prefs = {
-            "download.default_directory": "/home/ubuntu/Downloads",  # Set a writable directory for downloads
+            "download.default_directory": download_dir,
             "download.prompt_for_download": False,
             "download.directory_upgrade": True,
-            "safebrowsing.enabled": True,
+            "safebrowsing.enabled": True
         }
         chrome_options.add_experimental_option("prefs", chrome_prefs)
 
         # Get the path to the ChromeDriver dynamically from the script's directory
-        driver_path = ChromeDriverManager().install()
-        service = Service(driver_path)
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        chromedriver_path = os.path.join(current_dir, "chromedriver.exe")
 
+        # Use the dynamically constructed path for ChromeDriver
+        service = Service(chromedriver_path)
         driver = webdriver.Chrome(service=service, options=chrome_options)
         driver.maximize_window()
         try:
@@ -61,7 +67,8 @@ class StartangleLogin(APIView):
             return JsonResponse({"message": "OTP required", "session_id": session_id})
         except Exception as e:
             driver.quit()
-            return JsonResponse({"error": f"Failed to login: {str(e)}"}, status=500)
+            return JsonResponse({"error": str(e)}, status=500)
+
 
 class ProvideOTPAngle(APIView):
     def post(self, request):
@@ -128,8 +135,6 @@ class ProvideOTPAngle(APIView):
                 EC.element_to_be_clickable((By.XPATH, '//*[@id="download-reports-download-button"]'))
             )
             download_button.click()
-
             return JsonResponse({"status": "Success"}, status=200)
         except Exception as e:
-            return JsonResponse({"error": f"Failed to provide OTP or generate report: {str(e)}"}, status=500)
-
+            return JsonResponse({"error": str(e)}, status=500)
