@@ -932,7 +932,7 @@ class SendEmailAPIHTML3(APIView):
         message.attach(MIMEText(email_content, 'html'))
 
         # Send the email
-        with smtplib.SMTP('smtp.gmail.com', 587) as server:
+        with smtplib.SMTP('smtp.office365.com', 587) as server:
             server.starttls()
             server.login('accounts@sinewave.co.in', 'nuag qypq xuwi rqev')  # Make sure to replace this with your actual password
             text = message.as_string()
@@ -1051,7 +1051,7 @@ class webinar_2(APIView):
 
             with smtplib.SMTP('smtp.office365.com', 587) as server:
                 server.starttls()
-                server.login(sender_email, 'fzjv eaaj kdcv svqr')  # Be sure to use a valid app password
+                server.login(sender_email, 'mcwxnfkqhthkbnyw')  # Be sure to use a valid app password
                 server.sendmail(sender_email, receiver_email, msg.as_string())
                 return Response({"message": "Email sent successfully"}, status=status.HTTP_200_OK)
         except Exception as e:
@@ -1089,9 +1089,9 @@ class Helpline_Feedback(APIView):
 
         # Send the email
         try:
-            with smtplib.SMTP('smtp.gmail.com', 587) as server:
+            with smtplib.SMTP('smtp.office365.com', 587) as server:
                 server.starttls()
-                server.login(sender_email, 'fzjv eaaj kdcv svqr')  # Be sure to use a valid app password
+                server.login(sender_email, 'mcwxnfkqhthkbnyw')  # Be sure to use a valid app password
                 server.sendmail(sender_email, receiver_email, body)
                 return Response({"message": "Email sent successfully"}, status=status.HTTP_200_OK)
         except Exception as e:
@@ -1205,9 +1205,9 @@ class Helpline_Feedback_New(APIView):
 
         # Send the email
         try:
-            with smtplib.SMTP('smtp.gmail.com', 587) as server:
+            with smtplib.SMTP('smtp.office365.com', 587) as server:
                 server.starttls()
-                server.login(sender_email, 'fzjv eaaj kdcv svqr')  # Be sure to use a valid app password
+                server.login(sender_email, 'mcwxnfkqhthkbnyw')  # Be sure to use a valid app password
                 server.sendmail(sender_email, receiver_email, message)
                 return Response({"message": "Email sent successfully"}, status=status.HTTP_200_OK)
         except Exception as e:
@@ -1325,9 +1325,9 @@ class Helpline_Feedback_Thankyou_Message(APIView):
             msg.attach(MIMEText(html_template, "html"))
 
             # Send the email
-            with smtplib.SMTP("smtp.gmail.com", 587) as server:
+            with smtplib.SMTP("smtp.office365.com", 587) as server:
                 server.starttls()
-                server.login(sender_email, 'fzjv eaaj kdcv svqr')
+                server.login(sender_email, 'mcwxnfkqhthkbnyw')
                 server.sendmail(sender_email, receiver_email, msg.as_string())
                 return Response({"message": "Email sent successfully"}, status=status.HTTP_200_OK)
         except Exception as e:
