@@ -69,6 +69,8 @@ urlpatterns = [
     path('api/', include('Zerodha_Kite.urls')),
     path('api/', include('Taxbase_Login_API.urls')),
     path('api/', include('user_status_Teams_calling_system.urls')),
+    path('api/', include('mos_ratio_api.urls')),
+    
     
     
     
