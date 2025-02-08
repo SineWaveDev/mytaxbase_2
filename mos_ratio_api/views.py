@@ -20,7 +20,7 @@ class StockDataAPIView(APIView):
         except Exception as e:
             return Response({"error": "Failed to fetch stock data", "details": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-        valid_data = {}
+        script_details = []
         invalid_tickers = []
 
         def process_ticker(ticker):
@@ -49,8 +49,9 @@ class StockDataAPIView(APIView):
                 max_dd_duration = (drawdown < 0).astype(int).groupby(drawdown.ge(0).astype(int).cumsum()).sum().max()
                 kelly_criterion = (ann_mean / ann_std ** 2) if ann_std != 0 else 0
 
-                # Replace NaN, Inf, -Inf with 0
-                valid_data[ticker] = {
+                # Append formatted data to list
+                script_details.append({
+                    "Company_Name": ticker,
                     "ann_mean": round(np.nan_to_num(ann_mean, nan=0.0), 10),
                     "ann_std": round(np.nan_to_num(ann_std, nan=0.0), 10),
                     "sharpe": round(np.nan_to_num(sharpe_ratio, nan=0.0), 10),
@@ -59,8 +60,8 @@ class StockDataAPIView(APIView):
                     "calmar": round(np.nan_to_num(calmar_ratio, nan=0.0), 10),
                     "max_dd_duration": int(np.nan_to_num(max_dd_duration, nan=0.0)),
                     "kelly": round(np.nan_to_num(kelly_criterion, nan=0.0), 10)
-                }
-            except Exception as e:
+                })
+            except Exception:
                 invalid_tickers.append(ticker)
 
         # Process tickers in parallel using ThreadPoolExecutor
@@ -68,6 +69,9 @@ class StockDataAPIView(APIView):
             executor.map(process_ticker, tickers)
 
         if invalid_tickers:
-            return Response({"error": "Invalid tickers found", "invalid_tickers": invalid_tickers}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({
+                "error": "Invalid tickers found",
+                "invalid_tickers": invalid_tickers
+            }, status=status.HTTP_400_BAD_REQUEST)
 
-        return Response(valid_data, status=status.HTTP_200_OK)
+        return Response({"Script_Details": script_details}, status=status.HTTP_200_OK)
