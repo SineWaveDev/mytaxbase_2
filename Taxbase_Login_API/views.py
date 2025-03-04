@@ -46,7 +46,7 @@ async def run_multiple_apis(request):
             "payload": {
                 "HDKey": input_data.get("HDKey"),
                 "LicKey": input_data.get("LicKey"),
-                "ProductId": input_data.get("ProductId"),
+                "ProductId": input_data.get("ProductId_VAL"),
                 "MacID": input_data.get("MacID"),
             },
         },
