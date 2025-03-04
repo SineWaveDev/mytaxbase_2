@@ -83,6 +83,7 @@ INSTALLED_APPS = [
     'Taxbase_Login_API',
     'user_status_Teams_calling_system',
     'mos_ratio_api',
+    'internal_Testing_API',
 
 ]
 
