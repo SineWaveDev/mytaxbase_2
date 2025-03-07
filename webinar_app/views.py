@@ -9,7 +9,6 @@ import requests
 
 
 
-
 class SendEmailAPI(APIView):
     def post(self, request, *args, **kwargs):
         # Get parameters from the URL query parameters
@@ -20,56 +19,132 @@ class SendEmailAPI(APIView):
         webinar_time = request.query_params.get('webinar_time')
         webinar_url = request.query_params.get('webinar_url')
 
-        # Additional parameter for CC
-        cc_email = "rupesh.k@sinewave.in"
+        # Updated CC Email
+        cc_email = "training@sinewave.in"
 
         # Email configuration
         sender_email = "no-reply@sinewave.in"
         receiver_email = email
-        subject = f"FW: Webinar Registration Successful - {webinar_subject}"
+        subject = f"✅ Confirmation: Your Webinar Registration - {webinar_subject}"
 
-        # Modify the body to include one blank line after each line
-        body = f"Dear {name},\n\n" \
-               f"Webinar Subject: {webinar_subject}\n\n" \
-               f"Date: {webinar_date}\n\n" \
-               f"Time: {webinar_time}\n\n" \
-               f"Webinar URL: {webinar_url}"
+        # HTML Email Template with Modern Styling
+        body = f"""
+        <html>
+        <head>
+            <style>
+                body {{
+                    font-family: 'Arial', sans-serif;
+                    background-color: #f4f4f4;
+                    padding: 20px;
+                }}
+                .container {{
+                    max-width: 600px;
+                    background: #ffffff;
+                    padding: 30px;
+                    border-radius: 8px;
+                    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.1);
+                    text-align: center;
+                }}
+                h2 {{
+                    color: #004085;
+                    margin-bottom: 15px;
+                }}
+                p {{
+                    font-size: 16px;
+                    color: #333;
+                    line-height: 1.6;
+                }}
+                .details {{
+                    background: #e9ecef;
+                    padding: 15px;
+                    border-radius: 5px;
+                    margin-top: 20px;
+                    text-align: left;
+                }}
+                .details p {{
+                    margin: 5px 0;
+                }}
+                .btn {{
+                    display: inline-block;
+                    padding: 12px 20px;
+                    background-color: #007bff;
+                    color: white;
+                    text-decoration: none;
+                    border-radius: 5px;
+                    font-size: 16px;
+                    margin-top: 20px;
+                    font-weight: bold;
+                }}
+                .btn:hover {{
+                    background-color: #0056b3;
+                }}
+                .footer {{
+                    margin-top: 30px;
+                    font-size: 14px;
+                    color: #666;
+                }}
+                .footer a {{
+                    color: #007bff;
+                    text-decoration: none;
+                    font-weight: bold;
+                }}
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <h2>🎉 You're Registered!</h2>
+                <p>Dear <strong>{name}</strong>,</p>
+                <p>Thank you for registering for our upcoming webinar.</p>
 
-        # Append the provided message to the email body
-        closing_message = (
-            "\n\nIn case you need support, please feel free to email us at rupesh.k@sinewave.in."
-            "\n\nThanking You,\nYours Truly,\nwww.sinewave.co.in"
-        )
+                <div class="details">
+                    <p><strong>📌 Webinar:</strong> {webinar_subject}</p>
+                    <p><strong>📅 Date:</strong> {webinar_date}</p>
+                    <p><strong>⏰ Time:</strong> {webinar_time}</p>
+                </div>
 
-        body += closing_message
+                <a href="{webinar_url}" class="btn">Join Webinar</a>
+
+                <p class="footer">
+                    If you have any questions, feel free to contact us at 
+                    <a href="mailto:training@sinewave.in">training@sinewave.in</a>.
+                </p>
+                <p class="footer">
+                    Best Regards,<br>
+                    <strong>Sinewave Team</strong><br>
+                    <a href="https://www.sinewave.co.in">www.sinewave.co.in</a>
+                </p>
+            </div>
+        </body>
+        </html>
+        """
 
         # Gmail SMTP server and port
         smtp_server = "smtp.office365.com"
         smtp_port = 587
 
-        # Your Gmail account credentials
+        # Your SMTP credentials
         username = "no-reply@sinewave.in"
-        password = "mcwxnfkqhthkbnyw" 
+        password = "mcwxnfkqhthkbnyw"  
 
-        # Create the email message
+        # Create the email message with HTML content
         message = MIMEMultipart()
         message["From"] = sender_email
         message["To"] = receiver_email
-        message["Cc"] = cc_email  # Add CC recipient
+        message["Cc"] = cc_email  # Updated CC
         message["Subject"] = subject
-        message.attach(MIMEText(body, "plain"))
+        message.attach(MIMEText(body, "html"))  # Send as HTML email
 
-        # Connect to the SMTP server and send the email
+        # Connect to SMTP and send email
         try:
             with smtplib.SMTP(smtp_server, smtp_port) as server:
                 server.starttls()
                 server.login(username, password)
-                server.sendmail(sender_email, [receiver_email, cc_email],
-                                message.as_string())
+                server.sendmail(sender_email, [receiver_email, cc_email], message.as_string())
 
             return Response({"message": "Email sent successfully"}, status=status.HTTP_200_OK)
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
 
 
 
