@@ -84,6 +84,7 @@ INSTALLED_APPS = [
     'user_status_Teams_calling_system',
     'mos_ratio_api',
     'internal_Testing_API',
+    'MIS_OTP_Verify',
 
 ]
 
