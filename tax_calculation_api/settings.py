@@ -85,6 +85,7 @@ INSTALLED_APPS = [
     'mos_ratio_api',
     'internal_Testing_API',
     'MIS_OTP_Verify',
+    'Filed_Returns_Logs',
 
 ]
 

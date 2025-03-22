@@ -72,7 +72,6 @@ urlpatterns = [
     path('api/', include('mos_ratio_api.urls')),
     path('api/', include('internal_Testing_API.urls')),
     path('api/', include('MIS_OTP_Verify.urls')),
-    
-     
+    path('api/', include('Filed_Returns_Logs.urls')),
     
 ]
