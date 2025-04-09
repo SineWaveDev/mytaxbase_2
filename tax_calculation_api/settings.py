@@ -86,6 +86,7 @@ INSTALLED_APPS = [
     'internal_Testing_API',
     'MIS_OTP_Verify',
     'Filed_Returns_Logs',
+    'CRM_Software_data_API',
 
 ]
 

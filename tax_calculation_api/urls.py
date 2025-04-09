@@ -73,5 +73,7 @@ urlpatterns = [
     path('api/', include('internal_Testing_API.urls')),
     path('api/', include('MIS_OTP_Verify.urls')),
     path('api/', include('Filed_Returns_Logs.urls')),
+    path('api/', include('CRM_Software_data_API.urls')),
+    
     
 ]

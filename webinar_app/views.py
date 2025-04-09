@@ -6,7 +6,10 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from urllib.parse import urlencode
 import requests
-
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST
+import json
 
 
 class SendEmailAPI(APIView):
@@ -1407,3 +1410,140 @@ class Helpline_Feedback_Thankyou_Message(APIView):
                 return Response({"message": "Email sent successfully"}, status=status.HTTP_200_OK)
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+
+
+#AUC Intimation API
+# Email Config
+SMTP_SERVER = 'smtp.office365.com'
+SMTP_PORT = 587
+SENDER_EMAIL = 'no-reply@sinewave.in'
+SENDER_PASSWORD = 'mcwxnfkqhthkbnyw'
+
+@csrf_exempt
+@require_POST
+def send_invoice_email(request):
+    try:
+        data = json.loads(request.body)
+
+        required_fields = ['Cust_Name', 'Cust_ID', 'Product_Name', 'InvoiceNo', 'InvoiceDate', 'Amount', 'url', 'email']
+        for field in required_fields:
+            if field not in data:
+                return JsonResponse({'error': f'Missing required field: {field}'}, status=400)
+
+        # Extract data
+        cust_name = data['Cust_Name']
+        cust_id = data['Cust_ID']
+        product = data['Product_Name']
+        invoice_no = data['InvoiceNo']
+        invoice_date = data['InvoiceDate']
+        amount = data['Amount']
+        url = data['url']
+        recipient_email = data['email']
+
+        # Text above HTML template
+        text_line = "If you are unable to view this mailer, please <a href='http://www.sinewave.co.in/Mailer/2019/AUC_Offer/AUC_Recising_price/aucAmount/AUC_amount.htm'>Click here</a><br><br>"
+
+
+        # HTML content (just below that line)
+        html_template = f"""
+        <!DOCTYPE html>
+        <html lang="en">
+        <head><meta charset="UTF-8"><title>Invoice Reminder</title></head>
+        <body style="margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; background-color: #f5f7fa; color: #333;">
+        <table width="100%" cellpadding="0" cellspacing="0" style="padding: 30px 0;">
+            <tr><td align="center">
+            <table width="600" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border-radius: 10px; overflow: hidden; box-shadow: 0 0 10px rgba(0,0,0,0.08);">
+                <tr><td style="background-color: #004d99; padding: 20px 30px; color: white;">
+                    <h2 style="margin: 0; font-size: 22px;">SINEWAVE COMPUTER SERVICES PVT. LTD.</h2>
+                    <p style="margin: 5px 0 0; font-size: 14px;">Customer Invoice intimation</p>
+                </td></tr>
+                <tr><td style="padding: 30px;">
+                    <p style="margin: 0 0 15px;">Dear {cust_name},</p>
+                    <p style="margin: 0 0 15px;">Thank you for being a part of the Sinewave family. We hope everything is going great!</p>
+                    <p style="margin: 0 0 10px;">For any assistance, feel free to:</p>
+                    <ul style="padding-left: 20px; margin: 0 0 15px;">
+                        <li>Call us: <a href="tel:02049091000" style="color: #004d99; font-weight: 600;">020-49091000</a></li>
+                        <li>Email: <a href="mailto:crm@sinewave.co.in" style="color: #004d99; font-weight: 600;">crm@sinewave.co.in</a></li>
+                    </ul>
+                    <p style="margin: 0 0 10px;">To avoid service disruption, kindly clear the following outstanding AUC invoice:</p>
+                    <table width="100%" cellpadding="10" cellspacing="0" style="border-collapse: collapse; margin-top: 10px; font-size: 14px; border: 1px solid #ccc;">
+                        <thead><tr style="background-color: #e1ecf7; color: #003366;">
+                            <th style="border: 1px solid #ccc; text-align: left;">Sr. No</th>
+                            <th style="border: 1px solid #ccc; text-align: left;">Product</th>
+                            <th style="border: 1px solid #ccc; text-align: left;">Invoice No</th>
+                            <th style="border: 1px solid #ccc; text-align: left;">Date</th>
+                            <th style="border: 1px solid #ccc; text-align: left;">Amount</th>
+                        </tr></thead>
+                        <tbody><tr style="background-color: #f9f9f9;">
+                            <td style="border: 1px solid #ccc;">1</td>
+                            <td style="border: 1px solid #ccc;">{product}</td>
+                            <td style="border: 1px solid #ccc;"><a href="{url}"style="color: #004d99; text-decoration: none;">{invoice_no}</a></td>
+                            <td style="border: 1px solid #ccc;">{invoice_date}</td>
+                            <td style="border: 1px solid #ccc;">₹{amount}</td>
+                        </tr></tbody>
+                    </table>
+                    <p style="margin-top: 25px;">You can choose any of the following payment methods:</p>
+                    <table width="100%" cellpadding="12" cellspacing="0" style="border-collapse: collapse; font-size: 13px; border: 1px solid #ccc;">
+                        <thead><tr style="background-color: #e9f5ff;">
+                            <th align="left" style="border-right: 1px solid #ccc;">Online Payment</th>
+                            <th align="left" style="border-right: 1px solid #ccc;">NEFT</th>
+                            <th align="left">Cheque</th>
+                        </tr></thead>
+                        <tbody><tr style="background-color: #ffffff;">
+                           <td style="vertical-align: top; border-top: 1px solid #ccc; border-right: 1px solid #ccc; padding: 10px;">
+                                <a href="https://crm.sinewave.co.in/makepayment/" style="display: block; margin-bottom: 6px; color: #004d99;">Credit Card</a>
+                                <a href="https://crm.sinewave.co.in/makepayment/" style="display: block; margin-bottom: 6px; color: #004d99;">Debit Card</a>
+                                <a href="https://crm.sinewave.co.in/makepayment/" style="display: block; color: #004d99;">Net Banking</a>
+                            </td>
+
+                            <td style="vertical-align: top; border-top: 1px solid #ccc; border-right: 1px solid #ccc; padding: 10px;">
+                                <table cellpadding="6" cellspacing="0" style="width: 100%; font-size: 13px; color: #333;">
+                                    <tr><td style="width: 40%; font-weight: 600;">Beneficiary Name:</td><td>Sinewave Computer Services Pvt. Ltd.</td></tr>
+                                    <tr><td style="font-weight: 600;">Bank Name:</td><td>HDFC Bank Ltd</td></tr>
+                                    <tr><td style="font-weight: 600;">Account Number:</td><td>50200028474285</td></tr>
+                                    <tr><td style="font-weight: 600;">IFSC Code:</td><td>HDFC0000149</td></tr>
+                                    <tr><td style="font-weight: 600;">Branch:</td><td>Kothrud, Pune</td></tr>
+                                </table>
+                            </td>
+                            <td style="vertical-align: top; border-top: 1px solid #ccc; padding: 10px;">
+                                Draw cheque in favor of:<br><strong>"Sinewave Computer Services Pvt. Ltd."</strong>
+                            </td>
+                        </tr></tbody>
+                    </table>
+                    <p style="margin-top: 20px; font-size: 13px;"><strong>Note:</strong> If you have already completed the payment, kindly ignore this email and share payment confirmation with us.</p>
+                    <p style="margin-top: 30px;">Warm Regards,<br><strong>Team Sinewave</strong></p>
+                </td></tr>
+                <tr><td style="background-color: #004d99; color: white; text-align: center; padding: 20px; font-size: 12px;">
+                    <table width="100%" cellpadding="5"><tr>
+                        <td align="left"><strong>Email</strong><br>crm@sinewave.co.in</td>
+                        <td align="center"><strong>Contact</strong><br>020-49091000</td>
+                        <td align="right"><strong>Website</strong><br><a href="https://www.sinewave.co.in" style="color: #ffffff; text-decoration: underline;">www.sinewave.co.in</a></td>
+                    </tr></table>
+                    <div style="margin-top: 10px;">T-22, Third Floor, Super Mall, Salunke Vihar Road, Wanowrie, Pune - 411 040</div>
+                </td></tr>
+            </table></td></tr>
+        </table></body></html>
+        """
+
+        # Combine line and HTML template
+        full_html = text_line + html_template
+
+        # Create email message
+        message = MIMEMultipart("alternative")
+        message["Subject"] = "Invoice Reminder from Sinewave"
+        message["From"] = SENDER_EMAIL
+        message["To"] = recipient_email
+        message.attach(MIMEText(full_html, "html"))
+
+        # Send Email
+        with smtplib.SMTP(SMTP_SERVER, SMTP_PORT) as server:
+            server.starttls()
+            server.login(SENDER_EMAIL, SENDER_PASSWORD)
+            server.sendmail(SENDER_EMAIL, recipient_email, message.as_string())
+
+        return JsonResponse({'status': 'Email sent successfully'}, status=200)
+
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)

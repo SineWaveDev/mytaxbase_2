@@ -18,6 +18,7 @@ from webinar_app.views import (
     Helpline_Feedback,
     Helpline_Feedback_New,
     Helpline_Feedback_Thankyou_Message,
+    send_invoice_email,
 )
 
 
@@ -40,5 +41,6 @@ urlpatterns = [
     path('Helpline_Feedback/', Helpline_Feedback.as_view(), name='Helpline_Feedback'),
     path('Helpline_Feedback_New/', Helpline_Feedback_New.as_view(), name='Helpline_Feedback_New'),
     path('Helpline_Feedback_Thankyou_Message/', Helpline_Feedback_Thankyou_Message.as_view(), name='Helpline_Feedback_Thankyou_Message'),
+    path('send_invoice_email/', send_invoice_email, name='send_invoice_email'),
     
 ]
