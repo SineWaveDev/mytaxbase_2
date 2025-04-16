@@ -74,7 +74,7 @@ class TriggerCampaignView(APIView):
 
             interest_lower = interest_text.lower()
             if interest_lower == "interested":
-                campaign_name = "interested"
+                campaign_name = "interested2"
             elif interest_lower == "not interested":
                 campaign_name = "not_interested"
             else:
